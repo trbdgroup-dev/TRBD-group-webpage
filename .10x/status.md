@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** 3 — Planning complete (awaiting go-ahead for implementation)
+**Phase:** 4 — Implementation in progress
 **Started:** 2026-10-22
 
 ## Inputs
@@ -34,7 +34,7 @@
 - 2026-10-22: Planning complete. 26 tasks (~12 engineering days) in `decisions/engineering-manager/stage1-foundations.md`; approach per task in `decisions/senior-engineer/stage1-foundations.md`.
 
 ## Task progress (stage 1)
-- [ ] A1 Scaffold · [ ] A2 Local Supabase + migrations · [ ] A3 Storage spike · [ ] A4 Tokens/fonts/shell
+- [x] A1 Scaffold · [ ] A2 Local Supabase + migrations · [ ] A3 Storage spike · [ ] A4 Tokens/fonts/shell
 - [ ] B1 Users + access · [ ] B2 Media · [ ] B3 Globals · [ ] B4 Verticals + slugs · [ ] B5 Pages + blocks · [ ] B6 Revalidation + preview
 - [ ] C1 Data layer · [ ] C2 heroReducer · [ ] C3 HeroSlideshow · [ ] C4 Main blocks · [ ] C5 Other blocks + privacy · [ ] C6 Vertical page · [ ] C7 404 + polish
 - [ ] D1 Metadata · [ ] D2 Sitemap/robots/JSON-LD · [ ] D3 OG image
@@ -42,7 +42,6 @@
 - [ ] F1 E2E · [ ] F2 CI · [ ] F3 Sentry + Analytics · [ ] F4 Docs
 
 ## Open questions
-- Go-ahead to start Phase 4 (implementation).
 
 ## Blockers
 - None yet; awaiting answers above.

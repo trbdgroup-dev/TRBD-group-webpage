@@ -1,11 +1,34 @@
+# dependencies
 node_modules/
+
+# next.js / build
 .next/
 out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# env (keep .env.example)
+.env
+.env*.local
+
+# testing
 coverage/
 playwright-report/
 test-results/
-.env
-.env*.local
+blob-report/
+playwright/.cache/
+
+# payload local uploads (dev fallback only)
+/media
+
+# supabase
 supabase/.temp/
+supabase/.branches/
+
+# misc
+.vercel
+*.pem
 *.log
 .DS_Store
+.idea/

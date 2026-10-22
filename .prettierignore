@@ -1,0 +1,11 @@
+.next/
+node_modules/
+src/payload-types.ts
+src/app/(payload)/cms/importMap.js
+src/migrations/
+.10x/
+mockups/
+TRBD Consulting Group.html
+package-lock.json
+tech-stack.md
+tech-stack.pdf
