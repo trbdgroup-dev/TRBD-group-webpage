@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** 0 — Brainstorming: spec written, awaiting user review
+**Phase:** 1 — Strategy complete
 **Started:** 2026-10-22
 
 ## Inputs
@@ -29,9 +29,9 @@
 - 2026-10-22: Section 4 (SEO) APPROVED. No live site at trbdgroup.com, so no redirects. Canonical host https://www.trbdgroup.com (apex redirects).
 - 2026-10-22: Section 5 (testing, CI, docs) APPROVED. ADRs live in `docs/adr/`; `.10x/adrs/` links there.
 - 2026-10-22: Spec written: `.10x/specs/2026-10-22-stage1-foundations-design.md`.
+- 2026-10-22: Spec APPROVED by user. Payload 3.91.0 confirmed compatible with Next 16 (peer `>=16.3.3 <17`); pinned next 16.4.2.
 
 ## Open questions
-- User review of `.10x/specs/2026-10-22-stage1-foundations-design.md`.
 
 ## Blockers
 - None yet; awaiting answers above.
