@@ -42,6 +42,7 @@
 - [ ] F1 E2E · [ ] F2 CI · [ ] F3 Sentry + Analytics · [ ] F4 Docs
 
 ## Open questions
+- E2: user approval of `seed/photo-shortlist.md` (11 Unsplash photos).
 
 ## Blockers
-- None yet; awaiting answers above.
+- A2: Docker Desktop's Linux engine returns HTTP 500 on every API call (WSL `docker-desktop` distro running). Needs the user to restart Docker Desktop.
