@@ -18,3 +18,6 @@ Baseline: `tech-stack.md` (agreed 21 Oct 2026). Stack accepted as-is. Review not
 ## Decided
 - 2026-10-22: Greenfield build in `C:\Users\vinua\Documents\TRBD`. The landing page HTML is the design system (tokens, fonts, layout) and content source. No Web3Forms migration needed.
 - 2026-10-22: Stage 1 approach A approved (full CMS content model now). Rejected: B (code-first pages, Payload later: rework and contradicts stack), C (Pages-only, no Verticals collection: no routing email for stage 2, duplicated content).
+
+## Features
+- [stage1-foundations](stage1-foundations.md)

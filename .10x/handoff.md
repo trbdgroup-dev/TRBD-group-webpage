@@ -1,5 +1,5 @@
 # Handoff
 
-**From:** CTO + PM (Phase 1) → **To:** Architect + Staff Engineer (Phase 2)
+**From:** Architect + Staff Engineer (Phase 2) → **To:** Engineering Manager + Senior Engineer (Phase 3)
 
-Strategy written: `decisions/cto/stage1-foundations.md` (build verdict, pinned versions: next 16.4.2, payload 3.91.0) and `decisions/product-manager/stage1-foundations.md` (8 user stories). Design must produce ADR-001 (table ownership), ADR-002 (access enforcement split), ADR-003 (hero behaviour) in `docs/adr/`, plus architect and staff-engineer decision files.
+Design written: `decisions/architect/stage1-foundations.md` (components, data flow, failure modes) and `decisions/staff-engineer/stage1-foundations.md` (conventions). ADRs 001–003 in `docs/adr/` (index in `.10x/adrs/README.md`). Planning should break the spec into tasks of half a day or less, in dependency order, with the risky spikes (Payload + Next 16 scaffold, Supabase S3 storage) first.

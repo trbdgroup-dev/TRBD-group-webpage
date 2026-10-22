@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** 1 — Strategy complete
+**Phase:** 2 — Design complete
 **Started:** 2026-10-22
 
 ## Inputs
@@ -30,6 +30,7 @@
 - 2026-10-22: Section 5 (testing, CI, docs) APPROVED. ADRs live in `docs/adr/`; `.10x/adrs/` links there.
 - 2026-10-22: Spec written: `.10x/specs/2026-10-22-stage1-foundations-design.md`.
 - 2026-10-22: Spec APPROVED by user. Payload 3.91.0 confirmed compatible with Next 16 (peer `>=16.3.3 <17`); pinned next 16.4.2.
+- 2026-10-22: Design complete. ADR-001 (table ownership), ADR-002 (access split), ADR-003 (hero behaviour) accepted in `docs/adr/`.
 
 ## Open questions
 
