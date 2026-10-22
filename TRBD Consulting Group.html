@@ -1,0 +1,312 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>TRBD Consulting Group</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: navy masthead band, a five-tab vertical index as the centrepiece, quiet paper sections below */
+:root{
+  --ink:#0E2233; --ink-2:#3F5363; --paper:#F4F6F5; --surface:#FFFFFF; --line:#D6DEDD;
+  --teal:#1F5C63; --brass:#B67F22; --band:#0E2233; --band-fg:#EAF0EF; --band-mute:#9DB0B4;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#E6ECEB; --ink-2:#A4B4B8; --paper:#0B1820; --surface:#12242E; --line:#24404A;
+  --teal:#5FB3B5; --brass:#E0AE57; --band:#07121A; --band-fg:#EAF0EF; --band-mute:#8FA3A8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ink:#E6ECEB; --ink-2:#A4B4B8; --paper:#0B1820; --surface:#12242E; --line:#24404A;
+  --teal:#5FB3B5; --brass:#E0AE57; --band:#07121A; --band-fg:#EAF0EF; --band-mute:#8FA3A8; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
+
+/* Header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--band);color:var(--band-fg);border-bottom:1px solid rgba(255,255,255,.08)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mark{width:40px;height:40px;display:grid;place-items:center;border:1.5px solid var(--brass);font-family:var(--display);font-weight:800;font-stretch:75%;font-size:15px;letter-spacing:.04em;color:var(--brass)}
+.brand b{font-family:var(--display);font-stretch:112%;font-weight:700;font-size:17px;letter-spacing:.02em;display:block;line-height:1.1}
+.brand small{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--band-mute)}
+nav{display:flex;gap:22px;font-size:14px;overflow-x:auto;max-width:100%}
+nav a{text-decoration:none;color:var(--band-mute);white-space:nowrap;padding-block:4px}
+nav a:hover{color:var(--band-fg)}
+nav a.cta{color:var(--band);background:var(--brass);padding:4px 12px}
+
+/* Hero */
+.hero{background:var(--band);color:var(--band-fg)}
+.hero .wrap{padding-block:72px 64px;display:grid;grid-template-columns:1.35fr 1fr;gap:48px;align-items:end}
+.hero h1{font-size:clamp(40px,7vw,84px);font-weight:800;font-stretch:78%;letter-spacing:-.01em;text-transform:uppercase}
+.hero h1 em{font-style:normal;color:var(--brass)}
+.hero .lede{margin-top:22px;max-width:36em;color:var(--band-mute);font-size:18px}
+.hero-actions{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;font-weight:600;font-size:15px;padding:12px 20px;text-decoration:none;border:1.5px solid var(--brass);cursor:pointer;font-family:var(--body)}
+.btn.solid{background:var(--brass);color:#0E2233}
+.btn.ghost{color:var(--band-fg);border-color:rgba(255,255,255,.3)}
+.btn:hover{filter:brightness(1.08)}
+.ledger{border-top:1px solid rgba(255,255,255,.18)}
+.ledger li{display:grid;grid-template-columns:3.2em 1fr;gap:8px;padding-block:12px;border-bottom:1px solid rgba(255,255,255,.18);font-family:var(--display);font-stretch:100%;font-weight:600;font-size:19px}
+.ledger li span{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--brass);padding-top:5px}
+.ledger a{text-decoration:none}
+.ledger a:hover{color:var(--brass)}
+ul{list-style:none;margin:0;padding:0}
+
+/* Sections */
+section.block .wrap{padding-block:88px}
+.sec-head{display:grid;grid-template-columns:1fr 1.3fr;gap:32px;align-items:end;margin-bottom:44px}
+.sec-head h2{font-size:clamp(30px,4.4vw,50px);font-weight:750;font-stretch:85%;margin-top:10px}
+.sec-head p{color:var(--ink-2);max-width:38em}
+
+/* Verticals index */
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-bottom:none;background:var(--surface)}
+.tab{appearance:none;background:none;border:none;border-right:1px solid var(--line);border-bottom:3px solid transparent;padding:18px 16px;text-align:left;cursor:pointer;color:var(--ink-2);font-family:var(--display);font-weight:650;font-stretch:90%;font-size:17px;line-height:1.2;display:flex;flex-direction:column;gap:6px;min-width:0}
+.tab:last-child{border-right:none}
+.tab span{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.1em;color:var(--brass)}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--paper);border-bottom-color:var(--brass)}
+.tab:hover{color:var(--ink)}
+.panel{border:1px solid var(--line);background:var(--paper);padding:40px;display:grid;grid-template-columns:1.1fr 1fr;gap:44px}
+.panel h3{font-size:clamp(28px,3.6vw,40px);font-weight:750;font-stretch:85%}
+.panel .intro{margin-top:16px;color:var(--ink-2);max-width:34em}
+.panel .for{margin-top:26px}
+.panel .for p{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips li{border:1px solid var(--line);background:var(--surface);padding:5px 11px;font-size:13.5px}
+.services li{display:grid;grid-template-columns:1fr;gap:3px;padding-block:14px;border-top:1px solid var(--line)}
+.services li:last-child{border-bottom:1px solid var(--line)}
+.services b{font-weight:600}
+.services small{color:var(--ink-2);font-size:14px}
+
+/* Approach */
+.approach{background:var(--surface);border-block:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s}
+.steps li{padding:26px 24px 8px 0;border-top:2px solid var(--ink);margin-right:24px}
+.steps li:last-child{margin-right:0}
+.steps .n{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:.1em}
+.steps h3{font-size:24px;font-weight:700;font-stretch:90%;margin-top:10px}
+.steps p{margin-top:10px;color:var(--ink-2);font-size:15px}
+
+/* Why */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.why div{background:var(--paper);padding:28px}
+.why h3{font-size:21px;font-weight:700;font-stretch:95%}
+.why p{margin-top:10px;color:var(--ink-2);font-size:15px}
+
+/* Contact */
+.contact{background:var(--band);color:var(--band-fg)}
+.contact .sec-head p{color:var(--band-mute)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:48px}
+.details li{padding-block:14px;border-top:1px solid rgba(255,255,255,.16)}
+.details li:last-child{border-bottom:1px solid rgba(255,255,255,.16)}
+.details small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass)}
+.details span{color:var(--band-mute)}
+form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+form .full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--band-mute)}
+input,select,textarea{font:inherit;font-size:15px;color:var(--band-fg);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.22);padding:11px 12px;border-radius:0;width:100%}
+select option{color:#0E2233}
+textarea{min-height:120px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brass);outline-offset:0;border-color:var(--brass)}
+.note{font-size:14px;color:var(--brass);min-height:1.4em}
+
+footer{background:var(--band);color:var(--band-mute);border-top:1px solid rgba(255,255,255,.1);font-size:13px}
+footer .wrap{padding-block:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .hero .wrap,.sec-head,.panel,.contact-grid{grid-template-columns:1fr}
+  .tabs{grid-template-columns:repeat(3,1fr)}
+  .tab{border-bottom:1px solid var(--line)}
+  .steps{grid-template-columns:1fr 1fr;row-gap:24px}
+  .steps li:nth-child(2n){margin-right:0}
+  .why{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .hero .wrap{padding-block:48px 44px}
+  section.block .wrap{padding-block:60px}
+  .tabs{grid-template-columns:1fr 1fr}
+  .panel{padding:24px 18px}
+  .steps,.why,form{grid-template-columns:1fr}
+  .steps li{margin-right:0}
+  nav{gap:16px}
+}
+</style>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="TRBD Consulting Group home">
+      <span class="mark">TRBD</span>
+      <span><b>TRBD Consulting Group</b><small>Private Limited</small></span>
+    </a>
+    <nav aria-label="Main">
+      <a href="#verticals">Verticals</a>
+      <a href="#approach">Approach</a>
+      <a href="#why">Why TRBD</a>
+      <a href="#contact" class="cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Consulting across five verticals</p>
+      <h1 style="margin-top:14px">People, skills, energy and <em>markets</em> under one roof</h1>
+      <p class="lede">TRBD Consulting Group helps organisations hire the right workforce, build their skills, run energy projects, move to cleaner power and grow across borders. One partner, one point of accountability.</p>
+      <div class="hero-actions">
+        <a class="btn solid" href="#contact">Start a conversation</a>
+        <a class="btn ghost" href="#verticals">Explore our verticals</a>
+      </div>
+    </div>
+    <ul class="ledger" aria-label="Our verticals">
+      <li><span>V.01</span><a href="#verticals" data-go="0">Manpower</a></li>
+      <li><span>V.02</span><a href="#verticals" data-go="1">Education &amp; Training</a></li>
+      <li><span>V.03</span><a href="#verticals" data-go="2">Oil &amp; Gas</a></li>
+      <li><span>V.04</span><a href="#verticals" data-go="3">Green Energy</a></li>
+      <li><span>V.05</span><a href="#verticals" data-go="4">Global Business</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="block" id="verticals">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">What we do</p><h2>Five verticals, connected by one team</h2></div>
+      <p>Our verticals often work together. A new energy project may need skilled crews, safety training and market-entry support at the same time, and we can deliver all three.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Verticals"></div>
+    <div class="panel" role="tabpanel" id="panel" tabindex="0"></div>
+  </div>
+</section>
+
+<section class="block approach" id="approach">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">How we work</p><h2>From first brief to long-term support</h2></div>
+      <p>Every engagement follows the same four stages, whether we are filling fifty positions or opening a new market.</p>
+    </div>
+    <ol class="steps" style="list-style:none;padding:0;margin:0">
+      <li><p class="n">STAGE 1</p><h3>Understand</h3><p>We study your goals, site conditions, compliance needs and timelines before proposing anything.</p></li>
+      <li><p class="n">STAGE 2</p><h3>Plan</h3><p>You get a clear scope, schedule and cost, with named owners for each deliverable.</p></li>
+      <li><p class="n">STAGE 3</p><h3>Deliver</h3><p>Our team mobilises people, programmes or projects and reports progress against the plan.</p></li>
+      <li><p class="n">STAGE 4</p><h3>Sustain</h3><p>We stay on for follow-up, audits, retraining and replacement so results hold over time.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="block" id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Why TRBD</p><h2>What clients get from working with us</h2></div>
+      <p>We are built for organisations that need several kinds of support and would rather not manage several vendors.</p>
+    </div>
+    <div class="why">
+      <div><h3>One point of contact</h3><p>A single account lead coordinates every vertical involved in your project.</p></div>
+      <div><h3>Compliance first</h3><p>Documentation, certifications, visas and safety standards are checked before work begins.</p></div>
+      <div><h3>Sector knowledge</h3><p>Our consultants come from the industries they advise, from rigs to classrooms to boardrooms.</p></div>
+      <div><h3>Scalable teams</h3><p>We staff a short assignment or a multi-year programme with the same process.</p></div>
+      <div><h3>Cross-border reach</h3><p>We help clients source talent, partners and opportunities across countries and regions.</p></div>
+      <div><h3>Transparent reporting</h3><p>Regular progress reports show what has been done, what is next and what it costs.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Contact</p><h2>Tell us what you need</h2></div>
+      <p>Share a few details about your requirement and our team will get back to you within two working days.</p>
+    </div>
+    <div class="contact-grid">
+      <ul class="details">
+        <li><small>Company</small>TRBD Consulting Group Private Limited</li>
+        <li><small>Registered office</small><span>[Add office address]</span></li>
+        <li><small>Website</small><a href="https://www.trbdgroup.com" target="_blank" rel="noopener">www.trbdgroup.com</a></li>
+        <li><small>Email</small><a href="mailto:contact@trbdgroup.com">contact@trbdgroup.com</a></li>
+        <li><small>Phone</small><span>[Add phone number]</span></li>
+        <li><small>Hours</small><span>[Add working hours]</span></li>
+      </ul>
+      <form id="enquiry" novalidate>
+        <label>Full name<input id="f-name" name="name" required autocomplete="name"></label>
+        <label>Company<input id="f-company" name="company" autocomplete="organization"></label>
+        <label>Email<input id="f-email" name="email" type="email" required autocomplete="email"></label>
+        <label>Phone<input id="f-phone" name="phone" type="tel" autocomplete="tel"></label>
+        <label class="full">Vertical
+          <select id="f-vertical" name="vertical">
+            <option>Manpower</option><option>Education &amp; Training</option><option>Oil &amp; Gas</option><option>Green Energy</option><option>Global Business</option><option>More than one</option>
+          </select>
+        </label>
+        <label class="full">Your requirement<textarea id="f-msg" name="message" placeholder="Number of roles, project location, timelines, or the market you want to enter"></textarea></label>
+        <div class="full" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <button class="btn solid" type="submit">Send enquiry</button>
+          <p class="note" id="note" role="status"></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 TRBD Consulting Group Private Limited · <a href="https://www.trbdgroup.com" target="_blank" rel="noopener">www.trbdgroup.com</a></span>
+    <span>Manpower · Education &amp; Training · Oil &amp; Gas · Green Energy · Global Business</span>
+  </div>
+</footer>
+
+<script>
+const V=[
+ {name:"Manpower",title:"Manpower & Workforce Solutions",
+  intro:"We recruit and deploy skilled, semi-skilled and professional staff for projects at home and overseas, and handle the paperwork that comes with it.",
+  for:["Construction","Facilities","Hospitality","Healthcare","Manufacturing","Energy projects"],
+  svc:[["Permanent recruitment","Screening, interviews and trade tests for long-term roles."],["Contract & project staffing","Crews mobilised for fixed-term projects and shutdowns."],["Overseas placement","Documentation, medicals, visas and travel for international deployment."],["Payroll & HR outsourcing","Attendance, payroll and statutory compliance managed for you."]]},
+ {name:"Education & Training",title:"Education & Training",
+  intro:"We design and deliver training that leads to job-ready skills, from technical trades to corporate leadership, and guide students toward study opportunities.",
+  for:["Students","Job seekers","Corporate teams","Technicians","Institutions"],
+  svc:[["Vocational & skill training","Trade courses aligned to industry and certification standards."],["HSE & safety certification","Health, safety and environment programmes for site personnel."],["Corporate learning","Leadership, soft skills and compliance training for staff."],["Study abroad counselling","Course selection, admissions and visa guidance for students."]]},
+ {name:"Oil & Gas",title:"Oil & Gas Services",
+  intro:"We support upstream, midstream and downstream operators with specialist people, technical consulting and project support across the asset lifecycle.",
+  for:["Operators","EPC contractors","Refineries","Pipelines","Service companies"],
+  svc:[["Technical manpower","Engineers, inspectors, operators and rig crews on call."],["Project support","Planning, procurement coordination and site supervision."],["Inspection & QA/QC","Third-party inspection and quality documentation."],["Operations & maintenance","Shutdown, turnaround and routine maintenance teams."]]},
+ {name:"Green Energy",title:"Green Energy Consulting",
+  intro:"We help businesses and developers plan, build and run renewable energy projects that cut costs and emissions.",
+  for:["Industrial plants","Commercial buildings","Developers","Municipalities","Investors"],
+  svc:[["Solar project advisory","Feasibility, design review and vendor selection for rooftop and ground-mount systems."],["Energy audits","Measure consumption and find savings before you invest."],["Sustainability strategy","Decarbonisation roadmaps and ESG reporting support."],["Installation & O&M teams","Trained crews for installation, commissioning and upkeep."]]},
+ {name:"Global Business",title:"Global Business Advisory",
+  intro:"We help companies enter new markets, find the right partners and set up operations abroad with fewer surprises.",
+  for:["SMEs","Exporters","Startups","Investors","Family businesses"],
+  svc:[["Market entry strategy","Market research, entry models and go-to-market plans."],["Company formation","Incorporation, licensing and local registration support."],["Partner & trade matchmaking","Introductions to distributors, suppliers and joint-venture partners."],["Cross-border compliance","Guidance on import, export, tax and regulatory requirements."]]}
+];
+const tabs=document.querySelector(".tabs"),panel=document.getElementById("panel");
+const esc=s=>s.replace(/&/g,"&amp;");
+V.forEach((v,i)=>{const b=document.createElement("button");b.className="tab";b.role="tab";b.id="tab-"+i;
+ b.setAttribute("aria-controls","panel");b.innerHTML=`<span>V.0${i+1}</span>${esc(v.name)}`;b.onclick=()=>show(i);tabs.appendChild(b)});
+function show(i){
+ [...tabs.children].forEach((t,j)=>{t.setAttribute("aria-selected",j===i);t.tabIndex=j===i?0:-1});
+ const v=V[i];panel.setAttribute("aria-labelledby","tab-"+i);
+ panel.innerHTML=`<div><p class="eyebrow">Vertical 0${i+1}</p><h3 style="margin-top:10px">${esc(v.title)}</h3><p class="intro">${v.intro}</p>
+ <div class="for"><p>Who we work with</p><ul class="chips">${v.for.map(f=>`<li>${f}</li>`).join("")}</ul></div></div>
+ <ul class="services">${v.svc.map(s=>`<li><b>${esc(s[0])}</b><small>${s[1]}</small></li>`).join("")}</ul>`;
+ try{localStorage.setItem("trbd-v",i)}catch(e){}
+}
+tabs.addEventListener("keydown",e=>{const cur=[...tabs.children].findIndex(t=>t.getAttribute("aria-selected")==="true");
+ let n=e.key==="ArrowRight"?cur+1:e.key==="ArrowLeft"?cur-1:null;if(n===null)return;n=(n+V.length)%V.length;show(n);tabs.children[n].focus()});
+document.querySelectorAll("[data-go]").forEach(a=>a.addEventListener("click",()=>show(+a.dataset.go)));
+let start=0;try{start=+localStorage.getItem("trbd-v")||0}catch(e){}show(start);
+
+document.getElementById("enquiry").addEventListener("submit",e=>{e.preventDefault();
+ const f=e.target,note=document.getElementById("note");
+ if(!f.name.value.trim()||!/^\S+@\S+\.\S+$/.test(f.email.value)){note.textContent="Please enter your name and a valid email address.";return}
+ note.textContent="Thank you. This preview form does not send messages yet; please email contact@trbdgroup.com directly.";f.reset()});
+</script>
+
+</body></html>

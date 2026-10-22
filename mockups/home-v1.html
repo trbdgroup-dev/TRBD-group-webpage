@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRBD Home Mockup v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400..700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Throwaway mockup for design section 3 (hero: intro first, slideshow on demand). Placeholder "photos" are CSS gradients; real build uses stock photos from Payload Media. */
+:root{
+  --navy:#12263A; --ink:#1B2A38; --muted:#56656F; --line:#E4DFD5;
+  --white:#FFFFFF; --cream:#F8F5EF; --amber:#D99A2B; --amber-ink:#8F5D0E;
+  --serif:"Source Serif 4",Georgia,serif; --sans:"Public Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--white);color:var(--ink);font:16px/1.65 var(--sans)}
+h1,h2,h3{font-family:var(--serif);font-weight:500;margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.label{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-ink)}
+.rule{border-top:1.5px solid var(--navy);padding-top:22px}
+.more{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--amber-ink);text-decoration:none}
+.more i{width:28px;height:28px;border:1.5px solid currentColor;border-radius:50%;display:grid;place-items:center;font-style:normal;transition:transform .2s}
+.more:hover i{transform:translateX(3px)}
+.btn{display:inline-block;background:var(--amber);color:var(--navy);font-weight:600;font-size:15px;padding:12px 22px;text-decoration:none;border:0;cursor:pointer}
+.btn:hover{filter:brightness(1.05)}
+
+/* Header */
+header{position:sticky;top:0;z-index:20;background:var(--white);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:72px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mark{width:38px;height:38px;background:var(--navy);color:#fff;display:grid;place-items:center;font:600 13px var(--sans);letter-spacing:.06em}
+.brand b{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--navy)}
+nav{display:flex;align-items:center;gap:28px;font-size:15px;font-weight:500}
+nav a{text-decoration:none;color:var(--ink)}
+nav a:hover{color:var(--amber-ink)}
+nav .btn{padding:9px 18px;font-size:14px}
+
+/* Placeholder photos */
+.ph{background-size:cover;background-position:center;position:relative}
+.ph-manpower{background:radial-gradient(60% 50% at 70% 35%,#f1c27d55,transparent 70%),linear-gradient(160deg,#5d7186 0%,#2f4558 45%,#1b2a38 100%)}
+.ph-education{background:radial-gradient(50% 45% at 30% 30%,#fff3d1aa,transparent 70%),linear-gradient(150deg,#b8a68a 0%,#6e6656 50%,#3b3a36 100%)}
+.ph-oilgas{background:radial-gradient(40% 40% at 75% 25%,#ffb35c,transparent 70%),linear-gradient(170deg,#e08a3c 0%,#7a4a2a 45%,#20252b 100%)}
+.ph-green{background:radial-gradient(55% 50% at 65% 20%,#fff7c9cc,transparent 70%),linear-gradient(165deg,#9cc6dd 0%,#4f8a6a 50%,#1f3d2f 100%)}
+.ph-global{background:radial-gradient(45% 40% at 40% 30%,#bfe0ff88,transparent 70%),linear-gradient(160deg,#6d8fb3 0%,#304d6e 50%,#101d2c 100%)}
+.ph-cap{position:absolute;right:10px;bottom:8px;font-size:11px;color:#ffffffb0;letter-spacing:.02em}
+
+/* Hero */
+.hero{position:relative;min-height:clamp(620px,88vh,820px);color:#fff;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.hero .bg{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+.hero .bg.on{opacity:1}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0d1b29d9 0%,#0d1b2999 45%,#0d1b2933 100%)}
+.hero .wrap{position:relative;z-index:1;width:100%}
+.hero-copy{padding-top:96px;max-width:760px}
+.hero-copy .label{color:var(--amber)}
+.hero h1{font-size:clamp(38px,6vw,72px);margin-top:16px;font-weight:500}
+.hero .lede{margin-top:20px;font-size:18px;color:#ffffffd0;max-width:36em}
+.hero .more{color:#fff;margin-top:30px}
+.hero-foot{padding-bottom:32px}
+.bar{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.progress{flex:1;height:2px;background:#ffffff40;display:grid;grid-template-columns:repeat(5,1fr)}
+.progress span{background:transparent;transition:background .3s}
+.progress span.on{background:var(--amber)}
+.pause{background:none;border:1px solid #ffffff70;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.hero-cta{margin-top:34px;font-size:17px;padding:16px 28px;display:inline-flex;gap:12px;align-items:center;box-shadow:0 8px 24px #0006}
+.hero-cta span{transition:transform .2s}
+.hero-cta:hover span{transform:translateX(4px)}
+[hidden]{display:none!important}
+.ph-trbd{background:radial-gradient(50% 45% at 72% 35%,#e9d7b388,transparent 70%),linear-gradient(160deg,#7d8794 0%,#3b4a5a 50%,#12263a 100%)}
+.card{appearance:none;border:0;padding:0;cursor:pointer;height:132px;text-align:left;color:#fff;font:600 16px var(--sans);display:flex;align-items:flex-end;position:relative;overflow:hidden;outline-offset:4px}
+.card::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0d1b29cc,transparent 70%)}
+.card span{position:relative;padding:14px 16px}
+.card[aria-current="true"]{box-shadow:inset 0 -3px 0 var(--amber)}
+.card:hover span{text-decoration:underline;text-underline-offset:4px}
+
+/* Sections */
+section.s{padding:104px 0}
+.intro{display:grid;grid-template-columns:1fr 1.1fr 1.3fr;gap:40px;align-items:start}
+.intro h2{font-size:clamp(28px,3.4vw,40px);color:var(--navy)}
+.intro p{color:var(--muted)}
+
+.verticals{background:var(--cream)}
+.vhead{max-width:640px;margin-bottom:24px}
+.vhead h2{font-size:clamp(30px,3.8vw,46px);color:var(--navy);margin-top:12px}
+.vrow{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:center;padding:28px 0}
+.vrow:nth-child(even){grid-template-columns:.75fr 1.25fr}
+.vrow:nth-child(even) .vtext{order:2}
+.vtext{max-width:560px}
+.vtext h3{font-size:clamp(26px,2.8vw,34px);color:var(--navy);margin-top:12px}
+.vtext p{margin-top:14px;color:var(--muted)}
+.vtext .more{margin-top:22px}
+.graphic{position:relative;aspect-ratio:5/4;max-width:320px;width:100%;justify-self:center}
+.graphic svg{width:100%;height:100%;display:block}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:48px}
+.steps h3{font-size:24px;color:var(--navy)}
+.steps p{margin-top:10px;color:var(--muted);font-size:15px}
+.sechead{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:end}
+.sechead h2{font-size:clamp(30px,3.8vw,46px);color:var(--navy);margin-top:12px}
+.sechead p{color:var(--muted)}
+
+.why{background:var(--cream)}
+.whygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.whygrid div{background:var(--white);padding:30px;border-top:2px solid var(--amber)}
+.whygrid svg{width:28px;height:28px;stroke:var(--navy);fill:none;stroke-width:1.6}
+.whygrid h3{font-size:21px;color:var(--navy);margin-top:16px}
+.whygrid p{margin-top:8px;color:var(--muted);font-size:15px}
+
+.contact .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:start}
+.contact h2{font-size:clamp(30px,3.8vw,46px);color:var(--navy);margin-top:12px}
+.contact .lead{margin-top:16px;color:var(--muted);max-width:32em}
+.contact .btn{margin-top:28px}
+.details li{list-style:none;padding:16px 0;border-top:1px solid var(--line)}
+.details li:last-child{border-bottom:1px solid var(--line)}
+.details small{display:block;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-ink)}
+.details ul{margin:0;padding:0}
+
+footer{background:var(--navy);color:#C9D3DB;font-size:14px}
+footer .wrap{padding:56px 24px 32px}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+footer b{font-family:var(--serif);font-weight:600;font-size:20px;color:#fff}
+footer h4{margin:0 0 12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+footer a{text-decoration:none}
+footer a:hover{color:#fff}
+.legal{margin-top:40px;padding-top:20px;border-top:1px solid #ffffff22;font-size:13px;color:#93A3B0}
+
+.mocknote{position:fixed;left:12px;bottom:12px;z-index:30;background:#1B2A38;color:#fff;font-size:12px;padding:6px 10px;opacity:.85}
+
+@media (max-width:900px){
+  nav a:not(.btn){display:none}
+  .intro,.sechead,.contact .grid,.fgrid{grid-template-columns:1fr;gap:20px}
+  .vrow,.vrow:nth-child(even){grid-template-columns:1fr;gap:20px;padding:28px 0}
+  .graphic{max-width:260px;justify-self:start}
+  .vrow:nth-child(even) .vtext{order:0}
+  .steps{grid-template-columns:1fr 1fr}
+  .whygrid{grid-template-columns:1fr 1fr}
+  .cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-right:-24px;padding-right:24px;scrollbar-width:none}
+  .cards::-webkit-scrollbar{display:none}
+  .card{flex:0 0 62%;scroll-snap-align:start}
+}
+@media (max-width:560px){
+  .wrap{padding:0 16px}
+  section.s{padding:68px 0}
+  .hero-copy{padding-top:64px}
+  .steps,.whygrid{grid-template-columns:1fr}
+  .cards{margin-right:-16px;padding-right:16px}
+  .brand b{font-size:15px;line-height:1.2}
+  nav .btn{white-space:nowrap;padding:8px 12px;font-size:13px}
+  header .wrap{height:64px}
+}
+</style>
+</head>
+<body>
+<div class="mocknote">Mockup · placeholder images</div>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#" id="home"><span class="mark">TRBD</span><b>TRBD Consulting Group</b></a>
+    <nav aria-label="Main">
+      <a href="#verticals">Verticals</a>
+      <a href="#approach">How we work</a>
+      <a href="#why">Why TRBD</a>
+      <a class="btn" href="#contact">Contact us</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" aria-roledescription="carousel" aria-label="Our verticals">
+  <div class="bg ph ph-trbd on"><span class="ph-cap">Stock photo: consultants in a client meeting</span></div>
+  <div class="bg ph ph-manpower"><span class="ph-cap">Stock photo: crew on a project site</span></div>
+  <div class="bg ph ph-education"><span class="ph-cap">Stock photo: technical training session</span></div>
+  <div class="bg ph ph-oilgas"><span class="ph-cap">Stock photo: refinery at dusk</span></div>
+  <div class="bg ph ph-green"><span class="ph-cap">Stock photo: solar array</span></div>
+  <div class="bg ph ph-global"><span class="ph-cap">Stock photo: city skyline, business district</span></div>
+
+  <div class="wrap hero-copy" aria-live="polite">
+    <p class="label" id="h-label">TRBD Consulting Group</p>
+    <h1 id="h-title">People, skills, energy and markets under one roof</h1>
+    <p class="lede" id="h-lede" hidden></p>
+    <button class="btn hero-cta" id="h-cta">Explore our verticals <span aria-hidden="true">→</span></button>
+    <a class="more" id="h-link" href="#" hidden>Learn more <i>→</i></a>
+  </div>
+
+  <div class="wrap hero-foot">
+    <div class="bar">
+      <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+      <button class="pause" id="pause" aria-label="Pause rotation" hidden>❚❚</button>
+    </div>
+    <div class="cards" role="group" aria-label="Our five verticals">
+      <button class="card ph ph-manpower"><span>Manpower</span></button>
+      <button class="card ph ph-education"><span>Education &amp; Training</span></button>
+      <button class="card ph ph-oilgas"><span>Oil &amp; Gas</span></button>
+      <button class="card ph ph-green"><span>Green Energy</span></button>
+      <button class="card ph ph-global"><span>Global Business</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="about">
+  <div class="wrap">
+    <div class="sechead rule">
+      <div><p class="label">Who we are</p><h2>One partner, one point of accountability.</h2></div>
+      <p>TRBD Consulting Group Private Limited helps organisations hire the right workforce, build their skills, run energy projects, move to cleaner power and grow across borders. A single account lead coordinates every part of your project, so you work with one team instead of several vendors.</p>
+    </div>
+  </div>
+</section>
+
+<section class="s verticals" id="verticals">
+  <div class="wrap">
+    <div class="sechead rule" style="margin-bottom:40px">
+      <div><p class="label">What we do</p><h2>Five verticals, connected by one team.</h2></div>
+      <p>Our verticals often work together. A new energy project may need skilled crews, safety training and market-entry support at the same time, and we can deliver all three.</p>
+    </div>
+    <div id="rows"></div>
+  </div>
+</section>
+
+<section class="s" id="approach">
+  <div class="wrap">
+    <div class="sechead">
+      <div><p class="label">How we work</p><h2>From first brief to long-term support</h2></div>
+      <p>Every engagement follows the same four stages, whether we are filling fifty positions or opening a new market.</p>
+    </div>
+    <div class="steps">
+      <div class="rule"><h3>Understand</h3><p>We study your goals, site conditions, compliance needs and timelines before proposing anything.</p></div>
+      <div class="rule"><h3>Plan</h3><p>You get a clear scope, schedule and cost, with named owners for each deliverable.</p></div>
+      <div class="rule"><h3>Deliver</h3><p>Our team mobilises people, programmes or projects and reports progress against the plan.</p></div>
+      <div class="rule"><h3>Sustain</h3><p>We stay on for follow-up, audits, retraining and replacement so results hold over time.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="s why" id="why">
+  <div class="wrap">
+    <div class="sechead">
+      <div><p class="label">Why TRBD</p><h2>What clients get from working with us</h2></div>
+      <p>We are built for organisations that need several kinds of support and would rather not manage several vendors.</p>
+    </div>
+    <div class="whygrid">
+      <div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><h3>One point of contact</h3><p>A single account lead coordinates every vertical involved in your project.</p></div>
+      <div><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><h3>Compliance first</h3><p>Documentation, certifications, visas and safety standards are checked before work begins.</p></div>
+      <div><svg viewBox="0 0 24 24"><path d="M3 7h18v13H3z"/><path d="M8 7V4h8v3"/><path d="M3 12h18"/></svg><h3>Sector knowledge</h3><p>Our consultants come from the industries they advise, from rigs to classrooms to boardrooms.</p></div>
+      <div><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><h3>Scalable teams</h3><p>We staff a short assignment or a multi-year programme with the same process.</p></div>
+      <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><h3>Cross-border reach</h3><p>We help clients source talent, partners and opportunities across countries and regions.</p></div>
+      <div><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M9 8h4"/></svg><h3>Transparent reporting</h3><p>Regular progress reports show what has been done, what is next and what it costs.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="s contact" id="contact">
+  <div class="wrap grid">
+    <div>
+      <p class="label">Contact</p>
+      <h2>Tell us what you need</h2>
+      <p class="lead">Email us a few details about your requirement and our team will get back to you within two working days.</p>
+      <a class="btn" href="mailto:contact@trbdgroup.com">Email us</a>
+    </div>
+    <div class="details"><ul>
+      <li><small>Company</small>TRBD Consulting Group Private Limited</li>
+      <li><small>Email</small><a href="mailto:contact@trbdgroup.com">contact@trbdgroup.com</a></li>
+      <li><small>Website</small>www.trbdgroup.com</li>
+    </ul></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div><b>TRBD Consulting Group</b><p style="margin-top:12px;max-width:28em">People, skills, energy and markets under one roof.</p></div>
+      <div><h4>Verticals</h4><ul><li><a href="#">Manpower</a></li><li><a href="#">Education &amp; Training</a></li><li><a href="#">Oil &amp; Gas</a></li><li><a href="#">Green Energy</a></li><li><a href="#">Global Business</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#approach">How we work</a></li><li><a href="#why">Why TRBD</a></li><li><a href="#contact">Contact</a></li><li><a href="#">Privacy notice</a></li></ul></div>
+    </div>
+    <p class="legal">© 2026 TRBD Consulting Group Private Limited</p>
+  </div>
+</footer>
+
+<script>
+const V=[
+ {k:"manpower",name:"Manpower",title:"Manpower & Workforce Solutions",hero:"The right workforce, at home and overseas",
+  lede:"We recruit and deploy skilled, semi-skilled and professional staff, and handle the paperwork that comes with it.",
+  text:"We recruit and deploy skilled, semi-skilled and professional staff for projects at home and overseas, from permanent hires to project crews, with documentation, visas and payroll handled."},
+ {k:"education",name:"Education & Training",title:"Education & Training",hero:"Training that leads to job-ready skills",
+  lede:"From technical trades to corporate leadership, and guidance for students looking to study abroad.",
+  text:"We design and deliver training that leads to job-ready skills, from vocational trades and HSE certification to corporate learning, and guide students toward study opportunities."},
+ {k:"oilgas",name:"Oil & Gas",title:"Oil & Gas Services",hero:"Specialist people and support across the asset lifecycle",
+  lede:"Technical manpower, project support, inspection and maintenance teams for operators and contractors.",
+  text:"We support upstream, midstream and downstream operators with technical manpower, project support, inspection and QA/QC, and operations and maintenance teams."},
+ {k:"green",name:"Green Energy",title:"Green Energy Consulting",hero:"Renewable projects that cut costs and emissions",
+  lede:"We help businesses and developers plan, build and run clean energy projects.",
+  text:"We help businesses and developers plan, build and run renewable energy projects, from solar advisory and energy audits to sustainability strategy and trained O&M crews."},
+ {k:"global",name:"Global Business",title:"Global Business Advisory",hero:"Enter new markets with fewer surprises",
+  lede:"Market entry, company formation, partner matchmaking and cross-border compliance.",
+  text:"We help companies enter new markets, find the right partners and set up operations abroad, with support on company formation and cross-border compliance."}
+];
+const grads={manpower:["#5d7186","#1b2a38"],education:["#b8a68a","#3b3a36"],oilgas:["#e08a3c","#20252b"],green:["#9cc6dd","#1f3d2f"],global:["#6d8fb3","#101d2c"]};
+
+/* Composed graphic: navy-tinted photo in a circle, amber blocks, thin connector lines. Three layouts rotate. */
+function graphic(v,i){
+  const [a,b]=grads[v.k],id="g"+i,L=i%3;
+  const circle=[{cx:310,cy:210,r:145},{cx:210,cy:220,r:155},{cx:290,cy:230,r:140}][L];
+  const blocks=[
+    [[40,70,95,95],[140,70,95,95],[40,170,95,95]],
+    [[385,60,75,75],[385,145,75,75],[300,320,150,55]],
+    [[40,50,130,85],[430,280,55,55],[430,215,55,55]]
+  ][L];
+  const lines=[
+    "M87 265 V330 H250 M310 65 V25 H450",
+    "M422 220 V320 M50 220 H25 V380 H210",
+    "M105 135 V230 H150 M457 335 V380 H330"
+  ][L];
+  return `<svg viewBox="0 0 500 400" role="img" aria-label="${v.name} illustration">
+   <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>
+   <clipPath id="c${id}"><circle cx="${circle.cx}" cy="${circle.cy}" r="${circle.r}"/></clipPath></defs>
+   ${blocks.map(([x,y,w,h],j)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${j%2?'#F2D7A4':'#D99A2B'}"/>`).join("")}
+   <g clip-path="url(#c${id})"><rect width="500" height="400" fill="url(#${id})"/><rect width="500" height="400" fill="#12263A" opacity=".25"/>
+   <text x="${circle.cx}" y="${circle.cy+4}" text-anchor="middle" font-size="12" fill="#ffffffb0" font-family="Public Sans">stock photo</text></g>
+   <circle cx="${circle.cx}" cy="${circle.cy}" r="${circle.r}" fill="none" stroke="#12263A" stroke-width="1.5"/>
+   <path d="${lines}" stroke="#12263A" stroke-width="1.5" fill="none"/>  </svg>`;
+}
+document.getElementById("rows").innerHTML=V.map((v,i)=>`
+  <article class="vrow">
+    <div class="vtext rule"><p class="label">${v.name}</p><h3>${v.title}</h3><p>${v.text}</p>
+      <a class="more" href="#">Learn more <i>→</i></a></div>
+    <div class="graphic">${graphic(v,i)}</div>
+  </article>`).join("");
+
+/* Hero: starts on the TRBD intro (no rotation). Explore button or a tile starts the vertical slideshow.
+   Rotation 7s, pauses on hover/focus, pause button, off for reduced motion. Logo returns to the intro. */
+const bgs=[...document.querySelectorAll(".hero .bg")],cards=[...document.querySelectorAll(".card")],bars=[...document.querySelectorAll(".progress span")];
+const hero=document.querySelector(".hero"),pauseBtn=document.getElementById("pause"),cta=document.getElementById("h-cta"),link=document.getElementById("h-link"),lede=document.getElementById("h-lede");
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const INTRO={name:"TRBD Consulting Group",hero:"People, skills, energy and markets under one roof"};
+let cur=-1,timer=null,paused=reduce,hovering=false;
+function render(i){
+  cur=i;
+  const s=i<0?INTRO:V[i];
+  bgs.forEach((b,j)=>b.classList.toggle("on",j===i+1));
+  cards.forEach((c,j)=>c.setAttribute("aria-current",j===i));
+  bars.forEach((b,j)=>b.classList.toggle("on",j===i));
+  document.getElementById("h-label").textContent=s.name;
+  document.getElementById("h-title").textContent=s.hero;
+  lede.hidden=i<0; lede.textContent=s.lede||"";
+  cta.hidden=i>=0; link.hidden=i<0; pauseBtn.hidden=i<0;
+  if(i>=0) link.firstChild.textContent="Learn more about "+s.name+" ";
+}
+function tick(){clearInterval(timer);if(cur>=0&&!paused&&!hovering)timer=setInterval(()=>render((cur+1)%V.length),7000)}
+function start(i){render(i);tick()}
+function setPause(p){paused=p;pauseBtn.textContent=p?"▶":"❚❚";pauseBtn.setAttribute("aria-label",p?"Play rotation":"Pause rotation");tick()}
+cta.addEventListener("click",()=>start(0));
+cards.forEach((c,i)=>c.addEventListener("click",()=>start(i)));
+pauseBtn.addEventListener("click",()=>setPause(!paused));
+hero.addEventListener("mouseenter",()=>{hovering=true;tick()});
+hero.addEventListener("mouseleave",()=>{hovering=false;tick()});
+hero.addEventListener("focusin",()=>{hovering=true;tick()});
+hero.addEventListener("focusout",()=>{hovering=false;tick()});
+document.getElementById("home").addEventListener("click",e=>{e.preventDefault();paused=reduce;setPause(paused);render(-1);tick();scrollTo({top:0})});
+render(-1);
+</script>
+</body>
+</html>
