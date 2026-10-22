@@ -1,5 +1,5 @@
 # Handoff
 
-**From:** Architect + Staff Engineer (Phase 2) → **To:** Engineering Manager + Senior Engineer (Phase 3)
+**From:** Engineering Manager + Senior Engineer (Phase 3) → **To:** SDE + Senior Engineer + DBA (Phase 4)
 
-Design written: `decisions/architect/stage1-foundations.md` (components, data flow, failure modes) and `decisions/staff-engineer/stage1-foundations.md` (conventions). ADRs 001–003 in `docs/adr/` (index in `.10x/adrs/README.md`). Planning should break the spec into tasks of half a day or less, in dependency order, with the risky spikes (Payload + Next 16 scaffold, Supabase S3 storage) first.
+Start at A1 and follow the order in `decisions/engineering-manager/stage1-foundations.md`; approach notes per task in `decisions/senior-engineer/stage1-foundations.md`. Send the E2 stock-photo shortlist to the user right after A1. Docker Desktop must be running for A2 (Supabase local). Visual reference: `mockups/home-v1.html`. ADRs 001–003 in `docs/adr/` govern schemas, access and hero behaviour.

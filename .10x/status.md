@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** 2 — Design complete
+**Phase:** 3 — Planning complete (awaiting go-ahead for implementation)
 **Started:** 2026-10-22
 
 ## Inputs
@@ -31,8 +31,18 @@
 - 2026-10-22: Spec written: `.10x/specs/2026-10-22-stage1-foundations-design.md`.
 - 2026-10-22: Spec APPROVED by user. Payload 3.91.0 confirmed compatible with Next 16 (peer `>=16.3.3 <17`); pinned next 16.4.2.
 - 2026-10-22: Design complete. ADR-001 (table ownership), ADR-002 (access split), ADR-003 (hero behaviour) accepted in `docs/adr/`.
+- 2026-10-22: Planning complete. 26 tasks (~12 engineering days) in `decisions/engineering-manager/stage1-foundations.md`; approach per task in `decisions/senior-engineer/stage1-foundations.md`.
+
+## Task progress (stage 1)
+- [ ] A1 Scaffold · [ ] A2 Local Supabase + migrations · [ ] A3 Storage spike · [ ] A4 Tokens/fonts/shell
+- [ ] B1 Users + access · [ ] B2 Media · [ ] B3 Globals · [ ] B4 Verticals + slugs · [ ] B5 Pages + blocks · [ ] B6 Revalidation + preview
+- [ ] C1 Data layer · [ ] C2 heroReducer · [ ] C3 HeroSlideshow · [ ] C4 Main blocks · [ ] C5 Other blocks + privacy · [ ] C6 Vertical page · [ ] C7 404 + polish
+- [ ] D1 Metadata · [ ] D2 Sitemap/robots/JSON-LD · [ ] D3 OG image
+- [ ] E1 Draft copy · [ ] E2 Photos (needs user approval) · [ ] E3 Seed
+- [ ] F1 E2E · [ ] F2 CI · [ ] F3 Sentry + Analytics · [ ] F4 Docs
 
 ## Open questions
+- Go-ahead to start Phase 4 (implementation).
 
 ## Blockers
 - None yet; awaiting answers above.
