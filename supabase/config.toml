@@ -118,7 +118,13 @@ enabled = true
 # The maximum file size allowed (e.g. "5MB", "500KB").
 file_size_limit = "50MiB"
 
-# Uncomment to configure local storage buckets
+# Public site media (Payload Media collection via the S3 adapter). CVs and
+# documents get a separate private bucket in stage 4.
+[storage.buckets.media]
+public = true
+file_size_limit = "20MiB"
+allowed_mime_types = ["image/png", "image/jpeg", "image/webp", "image/avif", "image/svg+xml"]
+
 # [storage.buckets.images]
 # public = false
 # file_size_limit = "50MiB"

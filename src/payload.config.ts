@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
@@ -44,5 +45,30 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    // Media lives in the public Supabase Storage bucket and is served straight from it.
+    // With STORAGE_DRIVER=local (CI, tests) the plugin is off and Payload writes to ./media;
+    // alwaysInsertFields keeps the schema, and so the migrations, identical in both modes.
+    s3Storage({
+      enabled: env.STORAGE_DRIVER === 's3',
+      alwaysInsertFields: true,
+      bucket: env.S3_BUCKET ?? '',
+      config: {
+        endpoint: env.S3_ENDPOINT,
+        region: env.S3_REGION,
+        forcePathStyle: true,
+        credentials: {
+          accessKeyId: env.S3_ACCESS_KEY_ID ?? '',
+          secretAccessKey: env.S3_SECRET_ACCESS_KEY ?? '',
+        },
+      },
+      collections: {
+        media: {
+          disablePayloadAccessControl: true,
+          generateFileURL: ({ filename, prefix }) =>
+            [env.S3_PUBLIC_URL, prefix, filename].filter(Boolean).join('/'),
+        },
+      },
+    }),
+  ],
 })

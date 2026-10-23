@@ -7,9 +7,23 @@ const valid = {
   PAYLOAD_SECRET: 'x'.repeat(32),
 }
 
+const s3 = {
+  STORAGE_DRIVER: 's3',
+  S3_ENDPOINT: 'http://127.0.0.1:54321/storage/v1/s3',
+  S3_REGION: 'local',
+  S3_ACCESS_KEY_ID: 'key',
+  S3_SECRET_ACCESS_KEY: 'secret',
+  S3_BUCKET: 'media',
+  S3_PUBLIC_URL: 'http://127.0.0.1:54321/storage/v1/object/public/media',
+}
+
 describe('parseEnv', () => {
-  it('accepts a valid environment and defaults the site URL', () => {
-    expect(parseEnv(valid)).toEqual({ ...valid, NEXT_PUBLIC_SITE_URL: 'http://localhost:3000' })
+  it('accepts a valid environment and applies defaults', () => {
+    expect(parseEnv(valid)).toEqual({
+      ...valid,
+      NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
+      STORAGE_DRIVER: 'local',
+    })
   })
 
   it('rejects a non-postgres database URI', () => {
@@ -29,5 +43,20 @@ describe('parseEnv', () => {
     expect(() => parseEnv({ ...valid, NEXT_PUBLIC_SITE_URL: 'not a url' })).toThrow(
       /NEXT_PUBLIC_SITE_URL/,
     )
+  })
+
+  it('accepts a complete S3 storage configuration', () => {
+    expect(parseEnv({ ...valid, ...s3 }).STORAGE_DRIVER).toBe('s3')
+  })
+
+  it('requires every S3 variable when STORAGE_DRIVER=s3', () => {
+    expect(() => parseEnv({ ...valid, STORAGE_DRIVER: 's3' })).toThrow(
+      /S3_ENDPOINT: required[\s\S]*S3_PUBLIC_URL: required/,
+    )
+    expect(() => parseEnv({ ...valid, ...s3, S3_BUCKET: undefined })).toThrow(/S3_BUCKET/)
+  })
+
+  it('rejects an unknown storage driver', () => {
+    expect(() => parseEnv({ ...valid, STORAGE_DRIVER: 'ftp' })).toThrow(/STORAGE_DRIVER/)
   })
 })

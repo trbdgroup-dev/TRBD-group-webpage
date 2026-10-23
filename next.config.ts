@@ -6,13 +6,28 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
+// Media is served straight from the Supabase Storage public bucket (A3). Allow
+// next/image to optimise from that host only. Local Supabase runs on 127.0.0.1,
+// which Next.js 16 blocks by default, so local IPs are allowed only in that case.
+const mediaUrl = process.env.S3_PUBLIC_URL ? new URL(process.env.S3_PUBLIC_URL) : null
+const mediaIsLocal = mediaUrl ? ['127.0.0.1', 'localhost'].includes(mediaUrl.hostname) : false
+
 const nextConfig: NextConfig = {
   images: {
-    localPatterns: [
-      {
-        pathname: '/api/media/file/**',
-      },
-    ],
+    formats: ['image/avif', 'image/webp'],
+    // Disk storage (STORAGE_DRIVER=local) serves files through Payload's API.
+    localPatterns: [{ pathname: '/api/media/file/**' }],
+    remotePatterns: mediaUrl
+      ? [
+          {
+            protocol: mediaUrl.protocol.replace(':', '') as 'http' | 'https',
+            hostname: mediaUrl.hostname,
+            port: mediaUrl.port,
+            pathname: `${mediaUrl.pathname}/**`,
+          },
+        ]
+      : [],
+    dangerouslyAllowLocalIP: mediaIsLocal,
   },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {

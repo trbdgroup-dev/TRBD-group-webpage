@@ -38,3 +38,15 @@ What was built, deviations from plan, and tech debt, task by task.
 
 ## E2 Stock photos (2026-10-23, done early)
 - User approved the 11-photo shortlist (`seed/photo-shortlist.md`). Downloaded at 2400px wide (6.7 MB total) to `seed/images/`, each via Unsplash's download endpoint so it counts for the photographer. `seed/images/manifest.json` holds file, use, alt text, credit and source URL for the E3 seed.
+
+## A3 Storage spike (2026-10-23) — succeeded, no fallback needed
+**Built**
+- `@payloadcms/storage-s3@3.91.0` on the Media collection → Supabase Storage public bucket `media` (declared in `supabase/config.toml`, created with `npx supabase seed buckets`). S3 protocol endpoint `<api>/storage/v1/s3`, `forcePathStyle`.
+- `disablePayloadAccessControl` + `generateFileURL` → files served straight from `<api>/storage/v1/object/public/media/<file>` (no Payload proxy hop).
+- `STORAGE_DRIVER` env (`s3` | `local`, default `local`); S3 vars required only for `s3` (unit-tested). `local` = Payload disk storage for CI/tests. `alwaysInsertFields: true` keeps the schema identical in both modes (verified: `migrate:create` in local mode reports no changes).
+- Migration `20261023_093816_media_storage_fields` (`prefix`, `_objectkey` on media).
+- `next.config.ts`: remote pattern derived from `S3_PUBLIC_URL`; `formats: avif, webp`; `dangerouslyAllowLocalIP` only when the media host is 127.0.0.1/localhost (Next 16 blocks local IPs by default).
+
+**Verified:** upload via Local API → object in bucket; public URL 200 `image/jpeg` 417,796 bytes; delete removes the object; `/_next/image` 200 AVIF 34 KB / WebP 55 KB from the 418 KB original; disallowed host 400. Spike uploads and script removed; bucket empty.
+
+**Notes for go-live:** production `S3_*` values come from the cloud Supabase project (Storage → S3 connection); `S3_PUBLIC_URL` = `https://<ref>.supabase.co/storage/v1/object/public/media`. Add to launch checklist.
