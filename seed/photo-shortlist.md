@@ -1,4 +1,4 @@
-# Stock photo shortlist (task E2) — awaiting approval
+# Stock photo shortlist (task E2) — approved 2026-10-23, downloaded
 
 Source: Unsplash, all under the free **Unsplash License** (commercial use allowed, no attribution required; Unsplash+ photos excluded). Credits are still stored in each Media item's `credit` and `sourceUrl` fields.
 

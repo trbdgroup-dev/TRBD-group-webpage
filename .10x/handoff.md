@@ -1,7 +1,7 @@
 # Handoff
 
-**Current:** SDE, Phase 4. A1 done (see `decisions/sde/stage1-foundations.md`).
+**Current:** SDE, Phase 4. Done: A1, A2, E2 (see `decisions/sde/stage1-foundations.md`).
 
-**Next:** A2 local Supabase (Docker running; `npx supabase init` + `start`, first Payload migration into schema `payload`, first admin sign-in at `/cms`). Then send the E2 stock-photo shortlist to the user for approval, then A3 storage spike.
+**Next:** A3 storage spike: Payload S3 adapter → local Supabase Storage bucket `media` (S3 endpoint http://127.0.0.1:54321/storage/v1/s3, region `local`, keys from `npx supabase status -o env`), `next/image` remote pattern; fall back to disk locally if it fails. Then A4.
 
-`.env` exists locally (gitignored) with a generated `PAYLOAD_SECRET` and the local Supabase DB URL.
+Local stack: `npx supabase start` (Docker must be running), `npm run migrate`, `npm run seed:admin`, `npm run dev`. Admin at http://localhost:3000/cms with the credentials in `.env`.

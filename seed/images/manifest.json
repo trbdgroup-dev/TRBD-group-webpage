@@ -1,0 +1,79 @@
+[
+  {
+    "file": "trbd-hero-boardroom.jpg",
+    "use": "hero-intro",
+    "alt": "A team meeting around a long table in a bright, glass-walled boardroom",
+    "credit": "Christina @ wocintechchat.com on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/faEfWCdOKIg"
+  },
+  {
+    "file": "manpower-crew.jpg",
+    "use": "vertical:manpower",
+    "alt": "A crew of workers in yellow hard hats and orange safety vests on a project site",
+    "credit": "Mufid Majnun on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/7TR0TGS7zqg"
+  },
+  {
+    "file": "education-training-workshop.jpg",
+    "use": "vertical:education-training",
+    "alt": "Trainees in blue overalls practising metalwork at a workshop bench",
+    "credit": "Septian Setiawan on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/x2y2rzLMKiA"
+  },
+  {
+    "file": "oil-gas-refinery.jpg",
+    "use": "vertical:oil-gas",
+    "alt": "An industrial refinery with storage tanks and pipework under a golden sky",
+    "credit": "Red Shuheart on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/Wb4vcBqyGT8"
+  },
+  {
+    "file": "green-energy-solar-field.jpg",
+    "use": "vertical:green-energy",
+    "alt": "Rows of solar panels on a green field under a cloudy blue sky",
+    "credit": "American Public Power Association on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/513dBrMJ_5w"
+  },
+  {
+    "file": "global-business-skyline.jpg",
+    "use": "vertical:global-business",
+    "alt": "Modern skyscrapers rising above a waterfront business district",
+    "credit": "Zoshua Colah on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/VZElx4wClhE"
+  },
+  {
+    "file": "spare-manpower-site-crew.jpg",
+    "use": "spare",
+    "alt": "A site crew in reflective vests and hard hats standing together",
+    "credit": "Shubham Verma on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/Tlyteh1470o"
+  },
+  {
+    "file": "spare-education-classroom.jpg",
+    "use": "spare",
+    "alt": "A lecturer teaching a group of adult students in a classroom",
+    "credit": "Vitaly Gariev on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/RDf6Cvns88Q"
+  },
+  {
+    "file": "spare-oil-gas-offshore.jpg",
+    "use": "spare",
+    "alt": "An offshore oil platform standing in calm blue sea",
+    "credit": "Zach Theo on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/guADzpF9pDI"
+  },
+  {
+    "file": "spare-green-energy-solar-install.jpg",
+    "use": "spare",
+    "alt": "A technician in a hard hat installing solar panels",
+    "credit": "Siwawut Phoophinyo on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/JlhvFEVMwng"
+  },
+  {
+    "file": "spare-global-business-port.jpg",
+    "use": "spare",
+    "alt": "An aerial view of stacked shipping containers at a busy port",
+    "credit": "Ali Mkumbwa on Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/Annl9CjEaEs"
+  }
+]

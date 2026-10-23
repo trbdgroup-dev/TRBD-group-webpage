@@ -21,3 +21,20 @@ What was built, deviations from plan, and tech debt, task by task.
 - `@eslint/eslintrc` removed (no longer needed).
 
 **Tech debt:** none.
+
+## A2 Local Supabase + first migration (2026-10-23)
+**Built**
+- Supabase CLI 2.121.0 (devDependency); `supabase/config.toml` (project `trbd`, Postgres 17; realtime and analytics disabled locally). `npx supabase start` brings up DB on 54322, API/Storage on 54321, Studio on 54323.
+- First Payload migration `src/migrations/20261023_092515_initial.ts` (users, sessions, media, kv, locked docs, preferences, migrations) applied to schema `payload`. `public` schema untouched.
+- `seed/create-admin.ts` + `npm run seed:admin`: idempotent first super admin from `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD` (local `.env` only; generated throwaway password; `.env.example` documents the variables).
+
+**Verified:** `/` 200; `/cms` and `/cms/login` 200; `POST /api/users/login` with the seeded admin → 200 + token; wrong password → 401.
+
+**Deviations**
+- Payload's generated migration does not create its schema. Added `CREATE SCHEMA IF NOT EXISTS "payload"` at the top of the initial migration's `up`. Future migrations don't need it.
+- Docker Desktop's engine was broken until the user restarted it (now Docker 29.9.2).
+
+**Tech debt:** the `role` field on Users arrives in B1, which needs a new migration.
+
+## E2 Stock photos (2026-10-23, done early)
+- User approved the 11-photo shortlist (`seed/photo-shortlist.md`). Downloaded at 2400px wide (6.7 MB total) to `seed/images/`, each via Unsplash's download endpoint so it counts for the photographer. `seed/images/manifest.json` holds file, use, alt text, credit and source URL for the E3 seed.
