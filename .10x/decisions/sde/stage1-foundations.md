@@ -50,3 +50,16 @@ What was built, deviations from plan, and tech debt, task by task.
 **Verified:** upload via Local API → object in bucket; public URL 200 `image/jpeg` 417,796 bytes; delete removes the object; `/_next/image` 200 AVIF 34 KB / WebP 55 KB from the 418 KB original; disallowed host 400. Spike uploads and script removed; bucket empty.
 
 **Notes for go-live:** production `S3_*` values come from the cloud Supabase project (Storage → S3 connection); `S3_PUBLIC_URL` = `https://<ref>.supabase.co/storage/v1/object/public/media`. Add to launch checklist.
+
+## A4 Design tokens, fonts and shell (2026-10-23)
+**Built**
+- Tailwind 4.3.3 via `@tailwindcss/postcss`. Tokens in `src/app/(frontend)/globals.css` `@theme`: navy, ink, muted, line, white, cream, amber, amber-ink; `nav` breakpoint at 900px. Base styles (serif headings, amber focus ring, reduced-motion) and utilities `wrap`, `rule`, `section`.
+- Fonts via `next/font/google` (self-hosted): Source Serif 4 (opsz axis) and Public Sans, exposed as `--font-source-serif` / `--font-public-sans` (distinct names so the theme's `--font-serif`/`--font-sans` don't reference themselves).
+- `src/components/ui.tsx`: `Label`, `ButtonLink` (sm/md/lg), `MoreLink` (circled arrow), `SectionHeader` (single full-width rule; label + title left, intro right, as approved).
+- Static `Header` (sticky, white; links hidden below 900px, Contact button always) and `Footer` (navy, vertical and company links). C1 swaps their hard-coded links for the Navigation global and Verticals.
+- Frontend layout wires fonts, header, `<main id="main">`, footer. Placeholder home page exercises the primitives.
+- `.claude/launch.json` (`trbd-dev`) so the desktop app's browser pane can run the dev server.
+
+**Verified:** in the browser at 1280px (nav links visible, no horizontal overflow, computed fonts Source Serif 4 / Public Sans) and 375px (only logo + Contact, scrollWidth = 375); no console errors; build ✓.
+
+**Deviations:** none. **Tech debt:** header/footer links hard-coded until C1.

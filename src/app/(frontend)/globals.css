@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+
+/* Design tokens from the approved mockup (mockups/home-v1.html). Light only. */
+@theme {
+  --color-navy: #12263a;
+  --color-ink: #1b2a38;
+  --color-muted: #56656f;
+  --color-line: #e4dfd5;
+  --color-white: #ffffff;
+  --color-cream: #f8f5ef;
+  --color-amber: #d99a2b;
+  /* Amber for small text on light backgrounds (contrast >= 4.5:1). */
+  --color-amber-ink: #8f5d0e;
+
+  --font-serif: var(--font-source-serif), Georgia, serif;
+  --font-sans: var(--font-public-sans), system-ui, sans-serif;
+
+  --breakpoint-nav: 900px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif font-medium;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+  }
+}
+
+/* Page container: 1200px max, 24px gutters (16px on phones). */
+@utility wrap {
+  @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6;
+}
+
+/* Thin navy rule above a block, as in the mockup's section headers. */
+@utility rule {
+  @apply border-t-[1.5px] border-navy pt-[22px];
+}
+
+/* Vertical rhythm for top-level sections. */
+@utility section {
+  @apply py-[68px] sm:py-[104px];
+}

@@ -1,7 +1,7 @@
 # Handoff
 
-**Current:** SDE, Phase 4. Done: A1, A2, E2 (see `decisions/sde/stage1-foundations.md`).
+**Current:** SDE, Phase 4. Done: A1–A4, E2 (see `decisions/sde/stage1-foundations.md`).
 
-**Next:** A3 storage spike: Payload S3 adapter → local Supabase Storage bucket `media` (S3 endpoint http://127.0.0.1:54321/storage/v1/s3, region `local`, keys from `npx supabase status -o env`), `next/image` remote pattern; fall back to disk locally if it fails. Then A4.
+**Next:** B1 Users roles + `lib/access` with unit tests (new migration), then B2 Media fields/sizes, B3 globals, B4 Verticals + slugs, B5 Pages + blocks.
 
-Local stack: `npx supabase start` (Docker must be running), `npm run migrate`, `npm run seed:admin`, `npm run dev`. Admin at http://localhost:3000/cms with the credentials in `.env`.
+Local stack: Docker running → `npx supabase start` → `npm run migrate` → `npm run seed:admin` → `npm run dev` (or browser pane `trbd-dev`). `.env` has `STORAGE_DRIVER=s3` pointing at local Supabase Storage.
