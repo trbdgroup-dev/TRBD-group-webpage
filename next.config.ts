@@ -29,6 +29,12 @@ const nextConfig: NextConfig = {
       : [],
     dangerouslyAllowLocalIP: mediaIsLocal,
   },
+  // Belt and braces with robots.ts: anything other than the production deploy
+  // (local, Vercel previews) tells crawlers not to index it.
+  async headers() {
+    if (process.env.VERCEL_ENV === 'production') return []
+    return [{ source: '/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] }]
+  },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
       '.cjs': ['.cts', '.cjs'],

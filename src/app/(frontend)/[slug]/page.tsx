@@ -1,13 +1,17 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { VerticalPage } from '@/components/VerticalPage'
 import {
   getPage,
+  getSiteSettings,
   getVertical,
   listPublishedPageSlugs,
   listPublishedVerticalSlugs,
 } from '@/lib/payload'
+import { buildMetadata } from '@/lib/seo/metadata'
+import { pageDescription, pageImage } from '@/lib/seo/page-text'
 import { VERTICAL_SLUGS, type VerticalSlug } from '@/lib/slugs'
 
 // Top-level addresses: the five vertical pages (/manpower, /oil-gas, …) and CMS
@@ -27,6 +31,36 @@ export async function generateStaticParams() {
 
 const isVerticalSlug = (slug: string): slug is VerticalSlug =>
   (VERTICAL_SLUGS as readonly string[]).includes(slug)
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const settings = await getSiteSettings()
+
+  if (isVerticalSlug(slug)) {
+    const vertical = await getVertical(slug)
+    if (!vertical) return {}
+    return buildMetadata({
+      path: `/${slug}`,
+      title: vertical.title,
+      seo: vertical.seo,
+      fallbackDescription: vertical.summary,
+      fallbackImage: vertical.heroImage,
+      defaultImage: settings.defaultOgImage,
+    })
+  }
+
+  if (slug === 'home') return {}
+  const page = await getPage(slug)
+  if (!page) return {}
+  return buildMetadata({
+    path: `/${slug}`,
+    title: page.title,
+    seo: page.seo,
+    fallbackDescription: pageDescription(page),
+    fallbackImage: pageImage(page),
+    defaultImage: settings.defaultOgImage,
+  })
+}
 
 export default async function Page({ params }: Props) {
   const { slug } = await params

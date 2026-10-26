@@ -52,16 +52,18 @@ describe('revalidation plan', () => {
   })
 
   it('refreshes a page, including its old address after a slug change', () => {
-    expect(targetsFor('pages', { slug: 'home' })).toEqual([{ path: '/' }])
+    expect(targetsFor('pages', { slug: 'home' })).toEqual([{ path: '/' }, { path: '/sitemap.xml' }])
     expect(targetsFor('pages', { slug: 'about' }, { slug: 'about-us' })).toEqual([
       { path: '/about' },
       { path: '/about-us' },
+      { path: '/sitemap.xml' },
     ])
   })
 
   it('refreshes the whole site for verticals and media', () => {
-    expect(targetsFor('verticals', { slug: 'manpower' })).toEqual([{ path: '/', type: 'layout' }])
-    expect(targetsFor('media', {})).toEqual([{ path: '/', type: 'layout' }])
+    const site = [{ path: '/', type: 'layout' }, { path: '/sitemap.xml' }]
+    expect(targetsFor('verticals', { slug: 'manpower' })).toEqual(site)
+    expect(targetsFor('media', {})).toEqual(site)
   })
 })
 

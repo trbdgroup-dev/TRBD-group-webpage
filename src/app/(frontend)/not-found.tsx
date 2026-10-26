@@ -1,5 +1,12 @@
+import type { Metadata } from 'next'
+
 import { ButtonLink, Label, MoreLink } from '@/components/ui'
 import { getVerticals } from '@/lib/payload'
+
+export const metadata: Metadata = {
+  title: 'Page not found',
+  robots: { index: false, follow: true },
+}
 
 // Branded 404 inside the normal header and footer, with routes back into the site.
 export default async function NotFound() {

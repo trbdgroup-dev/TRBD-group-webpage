@@ -14,6 +14,8 @@ export type RevalidateTarget = { path: string; type?: 'layout' }
 
 /** Everything under the root layout: home, vertical pages, privacy, header, footer. */
 const WHOLE_SITE: RevalidateTarget = { path: '/', type: 'layout' }
+/** The sitemap is a route handler outside the layout, so it is refreshed explicitly. */
+const SITEMAP: RevalidateTarget = { path: '/sitemap.xml' }
 
 type Status = 'draft' | 'published' | null | undefined
 type Doc = { slug?: string | null; _status?: Status } | null | undefined
@@ -31,11 +33,11 @@ export function targetsFor(collection: string, doc: Doc, previousDoc?: Doc): Rev
     const paths = new Set<string>()
     if (doc?.slug) paths.add(pagePath(doc.slug))
     if (previousDoc?.slug) paths.add(pagePath(previousDoc.slug))
-    return [...paths].map((path) => ({ path }))
+    return [...[...paths].map((path) => ({ path })), SITEMAP]
   }
   // Verticals feed the home page, their own page and the footer; media and
   // globals can appear anywhere. The site is small, so refresh all of it.
-  return [WHOLE_SITE]
+  return [WHOLE_SITE, SITEMAP]
 }
 
 function run(targets: RevalidateTarget[], log: (msg: string) => void) {
@@ -77,6 +79,6 @@ export const revalidateAfterDelete: CollectionAfterDeleteHook = ({
 
 export const revalidateGlobal: GlobalAfterChangeHook = ({ doc, req, context }) => {
   if (context.disableRevalidate) return doc
-  run([WHOLE_SITE], (msg) => req.payload.logger.info(msg))
+  run([WHOLE_SITE, SITEMAP], (msg) => req.payload.logger.info(msg))
   return doc
 }

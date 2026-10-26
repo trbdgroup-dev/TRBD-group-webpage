@@ -175,3 +175,24 @@ What was built, deviations from plan, and tech debt, task by task.
 **Not verified:** the segment `error.tsx` page in a browser. Any DB failure also breaks the root layout's header, so the global page is what visitors actually see; `error.tsx` covers page-only failures.
 
 **Notes:** axe can't judge text over images; hero contrast was checked by calculation (above). Git Bash rewrites `/paths` in arguments; use `MSYS_NO_PATHCONV=1` for scripted URL checks.
+
+## D1–D3 SEO (2026-10-26)
+**Built**
+- `lib/seo/metadata.ts` `buildMetadata()`: title (home uses the fixed SEO title as `absolute`; others get "| TRBD Consulting Group" via the layout template), description (SEO field → summary/first block text, truncated at a word boundary to 155), canonical path, Open Graph (`en_IN`, site name, 1200×630 image), Twitter large-image card, `noindex, follow` when "Hide from search engines" is ticked. Image fallback chain: SEO image → document hero → Site Settings default → generated `/og?title=…`. Uses each upload's `og` crop.
+- `lib/seo/page-text.ts`: plain-text and image fallbacks from a page's blocks.
+- Root layout `generateMetadata`: `metadataBase` from `NEXT_PUBLIC_SITE_URL`, title template, Google/Bing verification codes from Site Settings. Home, `[slug]` (verticals + pages) and 404 (`noindex`) metadata.
+- `app/robots.ts` (must sit at the app root; inside the `(frontend)` route group Next ignores it and `[slug]` catches the URL) and `lib/seo/indexing.ts`: only `VERCEL_ENV=production` may be indexed; otherwise `Disallow: /`. Production disallows `/cms`, `/api/`, `/preview`, `/og`, `/account` and lists the sitemap. `next.config` adds `X-Robots-Tag: noindex, nofollow` outside production.
+- `app/(frontend)/sitemap.ts`: published, indexable pages and verticals with `lastModified`. `lib/revalidate` now refreshes `/sitemap.xml` on every publish (it's a route handler outside the layout).
+- `lib/seo/jsonld.ts` + `components/JsonLd`: Organization on every page (only entered facts), WebSite on home, Service (with the services as an offer catalog) + BreadcrumbList + FAQPage (only when questions exist) on vertical pages. `serializeJsonLd` escapes `<`, `>`, `&`, U+2028/9 as unicode escapes.
+- `/og` route (D3): next/og `ImageResponse`, title on navy with amber rule and TRBD mark, cached a day. A route (not `opengraph-image.tsx`) because file-based OG images override editor-chosen ones. `og` added to reserved slugs.
+
+**Bugs found and fixed**
+- The unit test caught that `'\u003c'` in source is just `<` again, so JSON-LD escaping did nothing (a `</script>` in CMS text could have broken out). The editing tools also convert `\uXXXX` in source, so escapes are now built at runtime from char codes.
+- robots.ts inside the route group was ignored (404); moved to `app/robots.ts`.
+- Sitemap wasn't refreshed on publish; added to every revalidation.
+
+**Verified (production build + `next start`, 28/28):** titles, descriptions, canonicals, og:image (hero crop / vertical photo / generated PNG 1200×630), twitter card, JSON-LD types per page and Organization omitting empty phone/address, 404 noindex, robots.txt `Disallow: /` and `X-Robots-Tag` outside production, sitemap contents + lastmod; ticking "Hide from search engines" removed the page from the sitemap on the next request and added `noindex`; restoring brought it back; a Search Console code typed into Site Settings appeared as `<meta name="google-site-verification">` and disappeared when cleared. Unit tests: 68.
+
+**Not verified end-to-end:** the production branch of robots.txt (allow + sitemap line) needs a `VERCEL_ENV=production` build; covered by unit tests, and on the launch checklist to confirm on the live domain.
+
+**Tooling note:** with `MSYS_NO_PATHCONV=1`, use `taskkill /PID … /T /F` (single slashes); the `//PID` form silently fails and leaves a stale server on port 3000.

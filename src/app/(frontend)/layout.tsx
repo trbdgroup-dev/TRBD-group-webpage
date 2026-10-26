@@ -3,21 +3,35 @@ import React from 'react'
 
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
+import { JsonLd } from '@/components/JsonLd'
 import { PreviewBar } from '@/components/PreviewBar'
 import { env } from '@/lib/env'
-import { isPreview } from '@/lib/payload'
+import { getSiteSettings, isPreview } from '@/lib/payload'
+import { organizationJsonLd } from '@/lib/seo/jsonld'
+import { HOME_TITLE, SITE_NAME, TITLE_TEMPLATE } from '@/lib/seo/metadata'
 
 import { sans, serif } from './fonts'
 import './globals.css'
 
-export const metadata: Metadata = {
-  title: 'TRBD Consulting Group',
-  description:
-    'Manpower, Education & Training, Oil & Gas, Green Energy and Global Business consulting.',
+// Site-wide defaults; each page's generateMetadata fills in its own title,
+// description, canonical URL and link-preview image (lib/seo).
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings()
+  const verification = {
+    ...(settings.googleVerification ? { google: settings.googleVerification } : {}),
+    ...(settings.bingVerification ? { other: { 'msvalidate.01': settings.bingVerification } } : {}),
+  }
+
+  return {
+    metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+    title: { default: HOME_TITLE, template: TITLE_TEMPLATE },
+    applicationName: SITE_NAME,
+    ...(Object.keys(verification).length ? { verification } : {}),
+  }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const preview = await isPreview()
+  const [preview, settings] = await Promise.all([isPreview(), getSiteSettings()])
 
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable}`}>
@@ -33,6 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
         </main>
         <Footer />
+        <JsonLd data={organizationJsonLd(settings, env.NEXT_PUBLIC_SITE_URL)} />
         {preview ? <PreviewBar serverURL={env.NEXT_PUBLIC_SITE_URL} /> : null}
       </body>
     </html>

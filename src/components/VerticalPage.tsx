@@ -1,11 +1,14 @@
 import { ChevronDown } from 'lucide-react'
 
+import { JsonLd } from '@/components/JsonLd'
 import { RichText } from '@/components/RichText'
 import { ButtonLink, Label, MoreLink } from '@/components/ui'
 import { VerticalGraphic } from '@/components/VerticalGraphic'
 import { hasRichText, mailtoHref } from '@/lib/content'
+import { env } from '@/lib/env'
 import { toImage } from '@/lib/media'
 import { getSiteSettings, getVerticals } from '@/lib/payload'
+import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from '@/lib/seo/jsonld'
 import type { Vertical } from '@/payload-types'
 
 // One vertical's page (spec §5): intro with graphic, who we work with, services,
@@ -22,9 +25,23 @@ export async function VerticalPage({ vertical }: { vertical: Vertical }) {
   const services = vertical.services ?? []
   const faqs = vertical.faqs ?? []
   const showDelivery = hasRichText(vertical.howWeDeliver)
+  const site = env.NEXT_PUBLIC_SITE_URL
+  const faqData = faqJsonLd(faqs)
+  const structuredData = [
+    serviceJsonLd(vertical, site),
+    breadcrumbJsonLd(
+      [
+        { name: 'Home', path: '/' },
+        { name: vertical.name, path: `/${vertical.slug}` },
+      ],
+      site,
+    ),
+    ...(faqData ? [faqData] : []),
+  ]
 
   return (
     <>
+      <JsonLd data={structuredData} />
       <section className="bg-white pb-12 pt-14 sm:pb-16 sm:pt-20">
         <div className="wrap grid items-center gap-10 nav:grid-cols-[1.25fr_0.75fr] nav:gap-14">
           <div className="rule">
