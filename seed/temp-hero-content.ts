@@ -16,6 +16,35 @@ const manifest: ManifestEntry[] = JSON.parse(
   fs.readFileSync(path.resolve('seed/images/manifest.json'), 'utf8'),
 )
 
+// Minimal Lexical builders for rich text fields.
+const text = (t: string) => ({
+  type: 'text',
+  text: t,
+  format: 0,
+  detail: 0,
+  mode: 'normal',
+  style: '',
+  version: 1,
+})
+const base = { direction: 'ltr' as const, format: '' as const, indent: 0, version: 1 }
+const para = (t: string) => ({
+  ...base,
+  type: 'paragraph',
+  textFormat: 0,
+  textStyle: '',
+  children: [text(t)],
+})
+const heading = (t: string) => ({ ...base, type: 'heading', tag: 'h2', children: [text(t)] })
+const bullets = (items: string[]) => ({
+  ...base,
+  type: 'list',
+  listType: 'bullet',
+  tag: 'ul',
+  start: 1,
+  children: items.map((t, i) => ({ ...base, type: 'listitem', value: i + 1, children: [text(t)] })),
+})
+const richText = (...children: object[]) => ({ root: { ...base, type: 'root', children } }) as never
+
 const verticals = [
   {
     slug: 'manpower',
@@ -213,6 +242,94 @@ await payload.create({
         heading: 'Tell us what you need',
         text: 'Email us a few details about your requirement and our team will get back to you within two working days.',
         buttonLabel: 'Email us',
+      },
+    ],
+  },
+  context: context(),
+})
+await payload.create({
+  collection: 'pages',
+  data: {
+    title: 'Privacy notice',
+    slug: 'privacy',
+    _status: 'published',
+    layout: [
+      {
+        blockType: 'richText',
+        body: richText(
+          para(
+            'Draft – needs review. This notice explains how TRBD Consulting Group Private Limited handles personal data on this website.',
+          ),
+          heading('What we collect'),
+          para(
+            'This website does not ask you for personal data. There are no forms, accounts or sign-ups at this stage.',
+          ),
+          para(
+            'If you email us, we receive the details you choose to send, such as your name, email address and your requirement, and use them only to reply to you.',
+          ),
+          heading('Analytics and cookies'),
+          para(
+            'We measure visits with privacy-friendly analytics that do not use cookies or identify you. The site sets no tracking cookies.',
+          ),
+          heading('Your rights'),
+          bullets([
+            'Ask what personal data we hold about you.',
+            'Ask us to correct or delete it.',
+            'Withdraw consent for anything you previously agreed to.',
+          ]),
+          para('To exercise these rights, email contact@trbdgroup.com.'),
+        ),
+      },
+    ],
+  },
+  context: context(),
+})
+const sampleImage = await upload('spare')
+await payload.create({
+  collection: 'pages',
+  data: {
+    title: 'Sample blocks (temporary)',
+    slug: 'sample-blocks',
+    _status: 'published',
+    layout: [
+      {
+        blockType: 'imageText',
+        image: sampleImage.id,
+        imageSide: 'right',
+        label: 'Sample',
+        heading: 'Image and text block',
+        body: richText(
+          para('Sample paragraph for checking the layout.'),
+          bullets(['Sample point one', 'Sample point two']),
+        ),
+      },
+      {
+        blockType: 'stats',
+        label: 'Sample figures – not real data',
+        items: [
+          { value: '00', label: 'Sample figure A' },
+          { value: '00', label: 'Sample figure B' },
+          { value: '00', label: 'Sample figure C' },
+          { value: '00', label: 'Sample figure D' },
+        ],
+      },
+      {
+        blockType: 'testimonials',
+        label: 'Sample',
+        heading: 'Testimonials block',
+        items: [
+          {
+            quote: 'Sample quote for checking the layout.',
+            name: 'Sample Name',
+            role: 'Role',
+            company: 'Company',
+          },
+          {
+            quote:
+              'A second sample quote, a little longer, to check how the cards line up side by side.',
+            name: 'Sample Name',
+          },
+        ],
       },
     ],
   },

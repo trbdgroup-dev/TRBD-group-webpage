@@ -4,14 +4,17 @@ import { ApproachStagesBlock } from './ApproachStages/Component'
 import { CallToActionBlock } from './CallToAction/Component'
 import { ContactBlock } from './Contact/Component'
 import { HeroBlock } from './Hero/Component'
+import { ImageTextBlock } from './ImageText/Component'
+import { RichTextBlock } from './RichText/Component'
 import { SectionIntroBlock } from './SectionIntro/Component'
+import { StatsBlock } from './Stats/Component'
+import { TestimonialsBlock } from './Testimonials/Component'
 import { VerticalsListBlock } from './VerticalsList/Component'
 import { WhyPointsBlock } from './WhyPoints/Component'
 
 type Block = NonNullable<Page['layout']>[number]
 
-// Renders a page's section blocks in order. Image and text, Stats, Testimonials
-// and Rich text arrive in C5.
+// Renders a page's section blocks in order.
 function RenderBlock({ block }: { block: Block }) {
   switch (block.blockType) {
     case 'hero':
@@ -28,8 +31,19 @@ function RenderBlock({ block }: { block: Block }) {
       return <CallToActionBlock block={block} />
     case 'contact':
       return <ContactBlock block={block} />
-    default:
-      return null
+    case 'imageText':
+      return <ImageTextBlock block={block} />
+    case 'stats':
+      return <StatsBlock block={block} />
+    case 'testimonials':
+      return <TestimonialsBlock block={block} />
+    case 'richText':
+      return <RichTextBlock block={block} />
+    default: {
+      // Every block type must be handled; TypeScript flags a missing case here.
+      const unhandled: never = block
+      return unhandled
+    }
   }
 }
 

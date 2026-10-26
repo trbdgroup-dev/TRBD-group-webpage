@@ -56,6 +56,47 @@
   }
 }
 
+/* CMS rich text (privacy notice, image-and-text bodies, vertical descriptions). */
+@layer components {
+  .rich-text {
+    @apply text-ink;
+  }
+  .rich-text > * + * {
+    margin-top: 1em;
+  }
+  .rich-text h2 {
+    @apply mt-10 text-[clamp(24px,2.6vw,30px)] text-navy;
+  }
+  .rich-text h3 {
+    @apply mt-8 text-[21px] text-navy;
+  }
+  .rich-text h4 {
+    @apply mt-6 font-sans text-base font-semibold text-navy;
+  }
+  .rich-text ul,
+  .rich-text ol {
+    @apply m-0 pl-6;
+  }
+  .rich-text ul {
+    list-style: disc;
+  }
+  .rich-text ol {
+    list-style: decimal;
+  }
+  .rich-text li + li {
+    margin-top: 0.4em;
+  }
+  .rich-text a {
+    @apply text-amber-ink underline underline-offset-2;
+  }
+  .rich-text blockquote {
+    @apply border-l-2 border-amber pl-5 text-muted italic;
+  }
+  .rich-text hr {
+    @apply border-0 border-t border-line;
+  }
+}
+
 /* Page container: 1200px max, 24px gutters (16px on phones). */
 @utility wrap {
   @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6;

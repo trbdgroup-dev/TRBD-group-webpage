@@ -58,6 +58,20 @@ export const getVertical = cache(async (slug: string): Promise<Vertical | null> 
   return docs[0] ?? null
 })
 
+/** Published page slugs for static generation (no draft mode at build time). */
+export async function listPublishedPageSlugs(): Promise<string[]> {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'pages',
+    where: { _status: { equals: 'published' } },
+    select: { slug: true },
+    pagination: false,
+    depth: 0,
+    overrideAccess: false,
+  })
+  return docs.map((doc) => doc.slug)
+}
+
 export const getPage = cache(async (slug: string): Promise<Page | null> => {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({

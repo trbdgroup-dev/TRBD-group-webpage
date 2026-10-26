@@ -131,3 +131,17 @@ What was built, deviations from plan, and tech debt, task by task.
 **Verified in the browser (temporary content using only the HTML file's wording):** 1280px — Who we are, What we do rows with real photos in the circle graphics, How we work in 4 columns, Why TRBD in 3, Contact details, footer; hero tiles still a 5-column grid; one h1; sections in the approved order. 375px — everything in one column, page scrollWidth 375. No console errors. Build: `/` static.
 
 **Note:** Contact's "Website" row shows the host from `NEXT_PUBLIC_SITE_URL` (localhost locally, www.trbdgroup.com in production).
+
+## C5 Remaining blocks + page route (2026-10-26)
+**Built**
+- `components/RichText.tsx`: Payload's Lexical JSX renderer with internal links resolved to page/vertical paths; `.rich-text` styles in globals.css (headings, lists, links, quotes, rules, 1em rhythm).
+- Blocks: Image and text (image side choice, 4:3 photo, rich text), Stats (cream band, `dl`; renders nothing when empty), Testimonials (`figure`/`blockquote` cards; nothing when empty), Rich text (720px reading column). `RenderBlocks` now handles all 11 block types, with an exhaustive `never` check so a new block type without a component fails typecheck.
+- `app/(frontend)/[slug]/page.tsx`: CMS pages at the top level. Pages without a leading Hero get an `h1` title header. `generateStaticParams` builds every published page (except `home`, which lives only at `/`); later pages render on first visit. Vertical slugs return 404 until C6 adds them to this route. `lib/payload.listPublishedPageSlugs()` reads without draft mode for build time.
+
+**Bug found and fixed:** `.rich-text p { margin: 0 }` out-ranked the `> * + *` spacing rule, so paragraphs ran together; removed.
+
+**Verified in the browser (temporary content):** `/privacy` — one h1, three h2 sections, disc bullets, 720px column, 16px paragraph rhythm; `/sample-blocks` — image-and-text, stats band and testimonial cards render in the site style (all values labelled "Sample"); 375px — no horizontal overflow on either; status codes: /privacy 200, /home 404, /manpower 404 (until C6), unknown 404; no console errors. Build: `/privacy` and `/sample-blocks` prerendered (●).
+
+**Note:** the build now reads published pages from the database, so CI must have a migrated, seeded DB before `next build` (already the plan in F2).
+
+**Temporary:** the privacy text here is a placeholder built from spec facts; E3 seeds the real draft notice (unpublished, for review). The `sample-blocks` page is test-only and is removed with the rest of the temporary content.
