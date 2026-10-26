@@ -59,6 +59,8 @@ test('outside production, robots and headers keep search engines out', async ({ 
   expect(robots).toMatch(/Disallow: \/\s*$/m)
   const home = await request.get('/')
   expect(home.headers()['x-robots-tag']).toBe('noindex, nofollow')
+  // Vercel Web Analytics loads only on the production deploy.
+  expect(await home.text()).not.toContain('/_vercel/insights/script.js')
 })
 
 test('404 pages are not indexed', async ({ request }) => {

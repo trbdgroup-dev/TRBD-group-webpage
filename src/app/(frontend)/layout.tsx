@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import React from 'react'
 
 import { Footer } from '@/components/Footer'
@@ -49,6 +50,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Footer />
         <JsonLd data={organizationJsonLd(settings, env.NEXT_PUBLIC_SITE_URL)} />
         {preview ? <PreviewBar serverURL={env.NEXT_PUBLIC_SITE_URL} /> : null}
+        {/* Vercel Web Analytics (F3): cookie-free, production deploy only. */}
+        {process.env.VERCEL_ENV === 'production' ? (
+          <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
+        ) : null}
       </body>
     </html>
   )

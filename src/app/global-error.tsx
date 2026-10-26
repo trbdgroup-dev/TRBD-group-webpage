@@ -1,5 +1,8 @@
 'use client'
 
+import * as Sentry from '@sentry/nextjs'
+import { useEffect } from 'react'
+
 // Last-resort fallback when the root layout itself fails (e.g. the header cannot
 // load its CMS data). It replaces the whole document, so it carries its own
 // minimal styles instead of the site's stylesheet.
@@ -10,6 +13,10 @@ export default function GlobalError({
   error: Error & { digest?: string }
   retry: () => void
 }) {
+  useEffect(() => {
+    Sentry.captureException(error)
+  }, [error])
+
   return (
     <html lang="en">
       <body

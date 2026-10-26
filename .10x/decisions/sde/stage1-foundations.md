@@ -230,3 +230,13 @@ What was built, deviations from plan, and tech debt, task by task.
 **Found and fixed:** the migrations check originally ended in `|| true`, which also swallowed a crashing config (false pass). Exit codes checked: no change → 0, crash → 1; `|| true` removed.
 
 **Not verified:** a real GitHub Actions run (no GitHub repository yet). First push will be the real test; `.10x/handoff` and the launch checklist note it.
+
+## F3 Sentry + Vercel Analytics (2026-10-26)
+**Built**
+- `@sentry/nextjs` 10.76.2 (newest release at least two weeks old). `src/instrumentation.ts` (server/edge init + `onRequestError = captureRequestError`), `src/instrumentation-client.ts` (browser init + router transitions), shared `lib/sentry/options.ts`: enabled only when `NEXT_PUBLIC_SENTRY_DSN` is set; errors only (`tracesSampleRate: 0`, no replay, `sendDefaultPii: false`); environment from Vercel. `error.tsx` and `global-error.tsx` capture to Sentry. `next.config` wrapped in `withSentryConfig` with telemetry off and source maps uploaded only when `SENTRY_AUTH_TOKEN`/`ORG`/`PROJECT` are set.
+- `lib/sentry/scrub.ts` on every event and breadcrumb: request reduced to method + query-free URL; user removed; query strings stripped from every URL anywhere in any string (contexts, tags, extra, transaction, messages, exception values, breadcrumbs); emails redacted, including URL-encoded `%40`. 11 unit tests incl. "nothing secret anywhere in the event".
+- Vercel Web Analytics via the documented script tag (`/_vercel/insights/script.js`), rendered only when `VERCEL_ENV=production`. The `@vercel/analytics` package (2.x and 1.x) was not installable: its optional SvelteKit peer chain demands Vite 8, conflicting with Vitest's Vite 7; the script tag does the same job without a dependency.
+
+**Verified end-to-end with a stand-in Sentry endpoint** (local HTTP server as the DSN target, production build, DB stopped, request `/never-built-page?secret=leak-me&contact=someone@example.com`): events arrived. **First run leaked** the secret and the URL-encoded email via `contexts.nextjs.request_path` (added by Sentry's Next.js integration); the scrubber was generalised to all strings at any depth and to `%40` emails. **Second run:** `request_path` `/never-built-page`, transaction `GET /[slug]`, no secret, email (plain or encoded) or cookie anywhere. The only address present is the database host inside the real error message, which is intended. After rebuilding without a DSN: e2e 59/59; e2e now also asserts the analytics script is absent outside production.
+
+**For launch:** create the Sentry project (EU or US region; set alerts), add `NEXT_PUBLIC_SENTRY_DSN` (+ source-map vars) in Vercel; enable Web Analytics in the Vercel project.
