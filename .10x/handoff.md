@@ -1,7 +1,11 @@
 # Handoff
 
-**Current:** SDE, Phase 4. Done: A1–A4, B1–B6, C1–C7, D1–D3, E1–E3, F1 (see `decisions/sde/stage1-foundations.md`).
+**From:** SDE (Phase 4, complete) → **To:** QA + Security (Phase 5)
 
-**Next:** F2 CI (build needs a migrated, seeded DB; run `npm run build`, start, `npm run test:e2e`), F3 Sentry + Analytics, F4 docs.
+Stage 1 is built: all tasks A1–F4 done (see `decisions/sde/stage1-foundations.md`). Local stack: Docker Desktop → `npx supabase start` → `npm run migrate` → `npm run seed` → `npm run build` → `npm run test:e2e`.
 
-Local data: `npm run seed` (or `npm run seed:reset` to start over). Seeding rules: pass a fresh `context` object to every Local API call; check `errors` on bulk deletes and updates.
+**For QA:** unit 77, e2e 59 (+7 intentional skips) at 1280/375; axe clean on key pages; reduced motion and keyboard verified. Review coverage gaps: segment `error.tsx` page never rendered in a browser; production robots.txt branch only unit-tested; no load/performance measurement on real infrastructure (Lighthouse is on the launch checklist).
+
+**For Security:** review `/preview` (secret + staff session + same-site redirect), access rules (`src/lib/access`, verified live 16/16 in B), JSON-LD escaping, Sentry scrubbing (verified with a stand-in endpoint), CSRF behaviour of Payload cookie auth, secrets handling (`.env` gitignored, CI uses throwaway values), dependency audit, security headers (none beyond X-Robots-Tag yet: consider CSP, HSTS, frame-ancestors).
+
+Docs: `README.md`, `docs/architecture.md`, `docs/content-guide.md`, `docs/launch-checklist.md`, ADRs in `docs/adr/`.
