@@ -2,15 +2,17 @@ import type { Field } from 'payload'
 
 // A link the content writer can point at a page, a vertical, a section of the
 // home page or another website. Resolved to an href by lib/links (task C1).
+// `required: false` lets editors leave it empty (the site then uses its default).
 export const linkField = ({
   name = 'link',
   withLabel = true,
-}: { name?: string; withLabel?: boolean } = {}): Field => ({
+  required = true,
+}: { name?: string; withLabel?: boolean; required?: boolean } = {}): Field => ({
   name,
   type: 'group',
   admin: { hideGutter: true },
   fields: [
-    ...(withLabel ? [{ name: 'label', type: 'text', required: true } as Field] : []),
+    ...(withLabel ? [{ name: 'label', type: 'text', required } as Field] : []),
     {
       type: 'row',
       fields: [
@@ -37,20 +39,20 @@ export const linkField = ({
       name: 'page',
       type: 'relationship',
       relationTo: 'pages',
-      required: true,
+      required,
       admin: { condition: (_, sibling) => sibling?.type === 'page' },
     },
     {
       name: 'vertical',
       type: 'relationship',
       relationTo: 'verticals',
-      required: true,
+      required,
       admin: { condition: (_, sibling) => sibling?.type === 'vertical' },
     },
     {
       name: 'anchor',
       type: 'select',
-      required: true,
+      required,
       options: [
         { label: 'Who we are', value: 'about' },
         { label: 'What we do', value: 'verticals' },
@@ -64,9 +66,10 @@ export const linkField = ({
       name: 'url',
       type: 'text',
       label: 'URL',
-      required: true,
+      required,
       validate: (value: unknown, { siblingData }: { siblingData: { type?: string } }) => {
         if (siblingData?.type !== 'external') return true
+        if (!required && !value) return true
         return typeof value === 'string' && /^(https?:|mailto:|tel:)/.test(value)
           ? true
           : 'Enter a full address starting with https://, mailto: or tel:'

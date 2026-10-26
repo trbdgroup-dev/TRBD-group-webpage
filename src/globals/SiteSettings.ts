@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
 import { isStaff } from '@/lib/access'
+import { revalidateGlobal } from '@/lib/revalidate'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -13,6 +14,9 @@ export const SiteSettings: GlobalConfig = {
   access: {
     read: () => true,
     update: isStaff,
+  },
+  hooks: {
+    afterChange: [revalidateGlobal],
   },
   fields: [
     {

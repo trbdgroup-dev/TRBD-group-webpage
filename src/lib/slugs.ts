@@ -16,6 +16,7 @@ export const RESERVED_PAGE_SLUGS: readonly string[] = [
   'account',
   'insights',
   'admin',
+  'preview',
   '_next',
   'sitemap.xml',
   'robots.txt',

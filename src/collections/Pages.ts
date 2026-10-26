@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { pageBlocks } from '@/blocks'
 import { seoField } from '@/fields/seo'
 import { isStaff, publishedOrStaff } from '@/lib/access'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 import { validatePageSlug } from '@/lib/slugs'
 
 export const Pages: CollectionConfig = {
@@ -18,6 +19,10 @@ export const Pages: CollectionConfig = {
     create: isStaff,
     update: isStaff,
     delete: isStaff,
+  },
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
   },
   versions: {
     drafts: {

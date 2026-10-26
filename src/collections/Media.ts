@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isStaff } from '@/lib/access'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -16,6 +17,10 @@ export const Media: CollectionConfig = {
     create: isStaff,
     update: isStaff,
     delete: isStaff,
+  },
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
   },
   upload: {
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],

@@ -5,6 +5,7 @@ import { parseEnv } from '@/lib/parse-env'
 const valid = {
   DATABASE_URI: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
   PAYLOAD_SECRET: 'x'.repeat(32),
+  PREVIEW_SECRET: 'p'.repeat(16),
 }
 
 const s3 = {
@@ -33,10 +34,15 @@ describe('parseEnv', () => {
   })
 
   it('rejects a short secret and lists every problem', () => {
-    expect(() => parseEnv({ DATABASE_URI: valid.DATABASE_URI, PAYLOAD_SECRET: 'short' })).toThrow(
+    expect(() => parseEnv({ ...valid, PAYLOAD_SECRET: 'short' })).toThrow(
       /PAYLOAD_SECRET: must be at least 32 characters/,
     )
     expect(() => parseEnv({})).toThrow(/DATABASE_URI[\s\S]*PAYLOAD_SECRET/)
+  })
+
+  it('requires a preview secret of at least 16 characters', () => {
+    expect(() => parseEnv({ ...valid, PREVIEW_SECRET: 'short' })).toThrow(/PREVIEW_SECRET/)
+    expect(() => parseEnv({ ...valid, PREVIEW_SECRET: undefined })).toThrow(/PREVIEW_SECRET/)
   })
 
   it('rejects an invalid site URL', () => {

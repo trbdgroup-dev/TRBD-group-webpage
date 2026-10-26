@@ -81,3 +81,23 @@ What was built, deviations from plan, and tech debt, task by task.
 
 **Tech debt / notes**
 - Autosave means opening "Create new" saves an empty draft immediately (standard Payload behaviour with autosave). Harmless (drafts are never public), but editors may see empty drafts if they abandon a new item. Document in the content guide; revisit if it annoys editors.
+
+## C1 Data layer + B6 revalidation and preview (2026-10-26)
+**Built**
+- `lib/payload.ts`: cached Payload client; draft-aware getters (`getSiteSettings`, `getNavigation`, `getVerticals`, `getVertical`, `getPage`) wrapped in React `cache()`. Public reads enforce access (`overrideAccess: false`); draft mode (only ever enabled for signed-in staff) reads drafts with access skipped.
+- `lib/links.ts`: CMS link → href (`page`, `vertical`, home-section anchor, external with optional new tab).
+- Header and Footer read Navigation, Site Settings and Verticals; the approved links are fallbacks while the CMS is empty. Footer verticals list is generated from Verticals.
+- `lib/revalidate.ts` (B6): `revalidatePath` on publish/unpublish/delete. Pages → their path (and old path on slug change); Verticals, Media, Site Settings, Navigation → whole site (`/`, layout). Draft saves never revalidate. Errors outside a Next request (seed/CLI) are logged and skipped; `context.disableRevalidate` opts out.
+- `/preview` (B6): requires `PREVIEW_SECRET` **and** a staff session (Payload auth from cookie), same-site path only (`lib/preview.safePreviewPath`); enables draft mode and redirects. `/preview/exit` disables it. `PreviewBar` (draft mode only) shows a notice + exit link and uses `RefreshRouteOnSave` for live preview. Admin `livePreview` for Pages and Verticals (mobile/tablet/desktop).
+- `PREVIEW_SECRET` added to env schema (required, ≥16 chars); `preview` reserved as a page slug.
+- `linkField({ required: false })`; Navigation header button is optional (migration `20261026_083348_optional_header_button`).
+
+**Why revalidatePath, not tags:** Next 16 replaces `unstable_cache` with `'use cache'`, which needs Cache Components (a different rendering model for every route, including Payload's admin). Our pages are statically generated and read the DB at render, so path revalidation covers it without that risk. `revalidatePath` regenerates on the next visit with no stale window, matching "changes appear within seconds".
+
+**Verified (production build + `next start`, 16/16):** default header before CMS content; publishing Navigation shows the new link on the very next request to the static `/`; header button label from CMS; draft vertical hidden from public footer; preview refuses wrong secret (401), no session (403), cross-site cookie request (403), off-site path (401); staff + secret → 307 home with draft cookie; preview shows the draft vertical and preview bar; public still doesn't; header button can be cleared; cleanup restores defaults. `/` stays static (○) in the build. Unit tests: 31.
+
+**Found and fixed during verification:** the header button couldn't be cleared (link fields were always required) → optional link fields.
+
+**Not yet verified:** the live preview pane inside the admin, visually. It's wired, but only becomes meaningful once page blocks render (C3–C6); check it then.
+
+**Note:** Payload accepts the session cookie only with a same-site `Origin` or `Sec-Fetch-Site` header (CSRF protection). Browsers always send these on navigation, so editors are unaffected; scripted tests must send them.

@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { seoField } from '@/fields/seo'
 import { isStaff, isSuperAdmin, publishedOrStaff, staffOnlyField } from '@/lib/access'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 import { VERTICAL_SLUGS } from '@/lib/slugs'
 
 export const Verticals: CollectionConfig = {
@@ -20,6 +21,10 @@ export const Verticals: CollectionConfig = {
     create: isSuperAdmin,
     update: isStaff,
     delete: isSuperAdmin,
+  },
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
   },
   versions: {
     drafts: {

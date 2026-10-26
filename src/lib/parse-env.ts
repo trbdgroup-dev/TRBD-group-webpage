@@ -9,7 +9,7 @@ const S3_KEYS = [
   'S3_PUBLIC_URL',
 ] as const
 
-// Later stages add their variables here (preview, Sentry, email).
+// Later stages add their variables here (Sentry, email).
 const schema = z
   .object({
     DATABASE_URI: z
@@ -17,6 +17,8 @@ const schema = z
       .regex(/^postgres(ql)?:\/\//, 'must be a postgres:// or postgresql:// connection string'),
     PAYLOAD_SECRET: z.string().min(32, 'must be at least 32 characters'),
     NEXT_PUBLIC_SITE_URL: z.url().default('http://localhost:3000'),
+    // Shared secret on admin preview links (B6); staff sign-in is also required.
+    PREVIEW_SECRET: z.string().min(16, 'must be at least 16 characters'),
     // `s3` = Supabase Storage (local and production); `local` = disk, for CI and tests.
     STORAGE_DRIVER: z.enum(['s3', 'local']).default('local'),
     S3_ENDPOINT: z.url().optional(),

@@ -1,23 +1,43 @@
 import Link from 'next/link'
 
+import { linkProps, type CmsLink } from '@/lib/links'
+import { getNavigation, getSiteSettings } from '@/lib/payload'
+
 import { ButtonLink } from './ui'
 
-// Static shell (A4). Links and CTA come from the Navigation global in C1; the
-// logo's hero-reset behaviour on the home page arrives with HeroSlideshow (C3).
-const links = [
-  { label: 'Verticals', href: '/#verticals' },
-  { label: 'How we work', href: '/#approach' },
-  { label: 'Why TRBD', href: '/#why' },
+// Header links come from the Navigation global. Until it has content, the
+// approved defaults are shown so the site never renders an empty header.
+// The logo's hero-reset behaviour on the home page arrives with HeroSlideshow (C3).
+const DEFAULT_LINKS = [
+  { href: '/#verticals', label: 'Verticals' },
+  { href: '/#approach', label: 'How we work' },
+  { href: '/#why', label: 'Why TRBD' },
 ]
+const DEFAULT_CTA = { href: '/#contact', label: 'Contact us' }
 
-export function Header() {
+export async function Header() {
+  const [navigation, settings] = await Promise.all([getNavigation(), getSiteSettings()])
+
+  const cmsLinks = (navigation.headerLinks ?? [])
+    .map((item) => {
+      const props = linkProps(item.link as CmsLink)
+      return props ? { ...props, label: item.link.label ?? '' } : null
+    })
+    .filter((link) => link !== null)
+  const links = cmsLinks.length > 0 ? cmsLinks : DEFAULT_LINKS
+
+  const ctaProps = linkProps(navigation.headerCta?.link as CmsLink)
+  const cta = ctaProps
+    ? { href: ctaProps.href, label: navigation.headerCta?.link?.label || DEFAULT_CTA.label }
+    : DEFAULT_CTA
+
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-white">
       <div className="wrap flex h-16 items-center justify-between gap-5 nav:h-[72px]">
         <Link
           href="/"
           className="flex items-center gap-3 no-underline"
-          aria-label="TRBD Consulting Group home"
+          aria-label={`${settings.companyName} home`}
         >
           <span
             aria-hidden="true"
@@ -26,21 +46,21 @@ export function Header() {
             TRBD
           </span>
           <span className="font-serif text-[15px] font-semibold leading-tight text-navy sm:text-[19px]">
-            TRBD Consulting Group
+            {settings.companyName}
           </span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-7 text-[15px] font-medium">
           {links.map((link) => (
             <Link
-              key={link.href}
+              key={`${link.href}-${link.label}`}
               href={link.href}
               className="hidden text-ink no-underline hover:text-amber-ink nav:inline"
             >
               {link.label}
             </Link>
           ))}
-          <ButtonLink href="/#contact" size="sm">
-            Contact us
+          <ButtonLink href={cta.href} size="sm">
+            {cta.label}
           </ButtonLink>
         </nav>
       </div>

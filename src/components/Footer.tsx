@@ -1,22 +1,21 @@
 import Link from 'next/link'
 
-// Static shell (A4). Content comes from the Navigation global and Verticals in C1.
-const verticals = [
-  { label: 'Manpower', href: '/manpower' },
-  { label: 'Education & Training', href: '/education-training' },
-  { label: 'Oil & Gas', href: '/oil-gas' },
-  { label: 'Green Energy', href: '/green-energy' },
-  { label: 'Global Business', href: '/global-business' },
+import { linkProps, type CmsLink } from '@/lib/links'
+import { getNavigation, getSiteSettings, getVerticals } from '@/lib/payload'
+
+// Verticals come from the Verticals collection; company links from Navigation,
+// with the approved defaults until it has content.
+const DEFAULT_COMPANY_LINKS = [
+  { href: '/#approach', label: 'How we work' },
+  { href: '/#why', label: 'Why TRBD' },
+  { href: '/#contact', label: 'Contact' },
+  { href: '/privacy', label: 'Privacy notice' },
 ]
 
-const company = [
-  { label: 'How we work', href: '/#approach' },
-  { label: 'Why TRBD', href: '/#why' },
-  { label: 'Contact', href: '/#contact' },
-  { label: 'Privacy notice', href: '/privacy' },
-]
+type FooterLink = { href: string; label: string; target?: string; rel?: string }
 
-function LinkGroup({ title, links }: { title: string; links: typeof company }) {
+function LinkGroup({ title, links }: { title: string; links: FooterLink[] }) {
+  if (links.length === 0) return null
   return (
     <div>
       <h2 className="mb-3 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-amber">
@@ -24,8 +23,13 @@ function LinkGroup({ title, links }: { title: string; links: typeof company }) {
       </h2>
       <ul className="grid gap-1.5">
         {links.map((link) => (
-          <li key={link.href}>
-            <Link href={link.href} className="no-underline hover:text-white">
+          <li key={`${link.href}-${link.label}`}>
+            <Link
+              href={link.href}
+              target={link.target}
+              rel={link.rel}
+              className="no-underline hover:text-white"
+            >
               {link.label}
             </Link>
           </li>
@@ -35,20 +39,35 @@ function LinkGroup({ title, links }: { title: string; links: typeof company }) {
   )
 }
 
-export function Footer() {
+export async function Footer() {
+  const [navigation, settings, verticals] = await Promise.all([
+    getNavigation(),
+    getSiteSettings(),
+    getVerticals(),
+  ])
+
+  const verticalLinks = verticals.map((v) => ({ href: `/${v.slug}`, label: v.name }))
+  const cmsCompany = (navigation.footerLinks ?? [])
+    .map((item) => {
+      const props = linkProps(item.link as CmsLink)
+      return props ? { ...props, label: item.link.label ?? '' } : null
+    })
+    .filter((link) => link !== null)
+  const companyLinks = cmsCompany.length > 0 ? cmsCompany : DEFAULT_COMPANY_LINKS
+
   return (
     <footer className="bg-navy text-sm text-[#c9d3db]">
       <div className="wrap pb-8 pt-14">
         <div className="grid gap-10 nav:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <p className="font-serif text-xl font-semibold text-white">TRBD Consulting Group</p>
-            <p className="mt-3 max-w-[28em]">People, skills, energy and markets under one roof.</p>
+            <p className="font-serif text-xl font-semibold text-white">{settings.companyName}</p>
+            {settings.tagline ? <p className="mt-3 max-w-[28em]">{settings.tagline}</p> : null}
           </div>
-          <LinkGroup title="Verticals" links={verticals} />
-          <LinkGroup title="Company" links={company} />
+          <LinkGroup title="Verticals" links={verticalLinks} />
+          <LinkGroup title="Company" links={companyLinks} />
         </div>
         <p className="mt-10 border-t border-white/15 pt-5 text-[13px] text-[#93a3b0]">
-          © {new Date().getFullYear()} TRBD Consulting Group Private Limited
+          © {new Date().getFullYear()} {settings.legalName}
         </p>
       </div>
     </footer>

@@ -13,6 +13,7 @@ import { Verticals } from './collections/Verticals'
 import { Navigation } from './globals/Navigation'
 import { SiteSettings } from './globals/SiteSettings'
 import { env } from './lib/env'
+import { documentPath, previewUrl } from './lib/preview'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,6 +31,20 @@ export default buildConfig({
     },
     meta: {
       titleSuffix: ' | TRBD CMS',
+    },
+    // Live preview of drafts beside the editor (B6). The preview route also
+    // checks the editor's session, so the secret alone never exposes drafts.
+    livePreview: {
+      collections: ['pages', 'verticals'],
+      url: ({ data, collectionConfig }) => {
+        const path = documentPath(collectionConfig?.slug ?? '', data?.slug as string | undefined)
+        return path ? previewUrl(env.NEXT_PUBLIC_SITE_URL, env.PREVIEW_SECRET, path) : ''
+      },
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 812 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1280, height: 800 },
+      ],
     },
   },
   collections: [Pages, Verticals, Media, Users],

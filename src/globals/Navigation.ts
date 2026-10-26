@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 import { linkField } from '@/fields/link'
 import { isStaff } from '@/lib/access'
+import { revalidateGlobal } from '@/lib/revalidate'
 
 export const Navigation: GlobalConfig = {
   slug: 'navigation',
@@ -13,6 +14,9 @@ export const Navigation: GlobalConfig = {
   access: {
     read: () => true,
     update: isStaff,
+  },
+  hooks: {
+    afterChange: [revalidateGlobal],
   },
   fields: [
     {
@@ -26,7 +30,10 @@ export const Navigation: GlobalConfig = {
       name: 'headerCta',
       type: 'group',
       label: 'Header button',
-      fields: [linkField({ name: 'link' })],
+      admin: {
+        description: 'Optional. Leave empty to show “Contact us” linking to the contact section.',
+      },
+      fields: [linkField({ name: 'link', required: false })],
     },
     {
       name: 'footerLinks',
