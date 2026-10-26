@@ -7,7 +7,11 @@ import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { Media } from './collections/Media'
+import { Pages } from './collections/Pages'
 import { Users } from './collections/Users'
+import { Verticals } from './collections/Verticals'
+import { Navigation } from './globals/Navigation'
+import { SiteSettings } from './globals/SiteSettings'
 import { env } from './lib/env'
 
 const filename = fileURLToPath(import.meta.url)
@@ -28,7 +32,8 @@ export default buildConfig({
       titleSuffix: ' | TRBD CMS',
     },
   },
-  collections: [Users, Media],
+  collections: [Pages, Verticals, Media, Users],
+  globals: [SiteSettings, Navigation],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {

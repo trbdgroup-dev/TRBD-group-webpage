@@ -67,18 +67,24 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    pages: Page;
+    verticals: Vertical;
     media: Media;
+    users: User;
     'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    verticals: VerticalsSelect<false> | VerticalsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -87,15 +93,27 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    navigation: Navigation;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
   };
   user: User;
   jobs: {
-    tasks: unknown;
+    tasks: {
+      schedulePublish: TaskSchedulePublish;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -118,11 +136,486 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * The home page (address “home”), the privacy notice and any future pages.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  /**
+   * Sections in display order. Drag to reorder.
+   */
+  layout?:
+    | (
+        | HeroBlock
+        | SectionIntroBlock
+        | VerticalsListBlock
+        | ApproachStagesBlock
+        | WhyPointsBlock
+        | ImageTextBlock
+        | StatsBlock
+        | TestimonialsBlock
+        | CallToActionBlock
+        | ContactBlock
+        | RichTextBlock
+      )[]
+    | null;
+  /**
+   * Optional. Leave empty to use the page title, summary and main image.
+   */
+  seo?: {
+    /**
+     * Shown in search results and browser tabs. About 50–60 characters.
+     */
+    metaTitle?: string | null;
+    /**
+     * Shown under the title in search results. About 120–155 characters.
+     */
+    metaDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    noIndex?: boolean | null;
+  };
+  /**
+   * Page address. Use “home” for the home page.
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock".
+ */
+export interface HeroBlock {
+  label?: string | null;
+  title: string;
+  /**
+   * Starts the vertical slideshow.
+   */
+  ctaLabel: string;
+  backgroundImage: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero';
+}
+/**
+ * Site images. Alt text is required. Stock photos keep their credit and source until the firm replaces them.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Describe what the image shows for people using screen readers, e.g. "Rows of solar panels on a green field".
+   */
+  alt: string;
+  caption?: string | null;
+  /**
+   * e.g. "Jane Doe on Unsplash". Leave empty for the firm’s own photos.
+   */
+  credit?: string | null;
+  sourceUrl?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionIntroBlock".
+ */
+export interface SectionIntroBlock {
+  /**
+   * Lets menu links jump to this section.
+   */
+  anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+  label: string;
+  heading: string;
+  text?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sectionIntro';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VerticalsListBlock".
+ */
+export interface VerticalsListBlock {
+  /**
+   * Lets menu links jump to this section.
+   */
+  anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+  label: string;
+  heading: string;
+  intro?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'verticalsList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApproachStagesBlock".
+ */
+export interface ApproachStagesBlock {
+  /**
+   * Lets menu links jump to this section.
+   */
+  anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+  label: string;
+  heading: string;
+  intro?: string | null;
+  stages?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'approachStages';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhyPointsBlock".
+ */
+export interface WhyPointsBlock {
+  /**
+   * Lets menu links jump to this section.
+   */
+  anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+  label: string;
+  heading: string;
+  intro?: string | null;
+  points?:
+    | {
+        title: string;
+        icon:
+          'user-round' | 'shield-check' | 'briefcase' | 'chart-column' | 'globe' | 'file-text' | 'handshake' | 'clock';
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'whyPoints';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageTextBlock".
+ */
+export interface ImageTextBlock {
+  /**
+   * Lets menu links jump to this section.
+   */
+  anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+  image: number | Media;
+  imageSide?: ('left' | 'right') | null;
+  label?: string | null;
+  heading: string;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageText';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock".
+ */
+export interface StatsBlock {
+  label?: string | null;
+  /**
+   * Only use figures the firm can stand behind.
+   */
+  items?:
+    | {
+        /**
+         * e.g. “500+”
+         */
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stats';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  label?: string | null;
+  heading?: string | null;
+  /**
+   * Only publish quotes the client has approved.
+   */
+  items?:
+    | {
+        quote: string;
+        name: string;
+        role?: string | null;
+        company?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonials';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock".
+ */
+export interface CallToActionBlock {
+  heading: string;
+  text?: string | null;
+  button: {
+    label: string;
+    type?: ('page' | 'vertical' | 'anchor' | 'external') | null;
+    newTab?: boolean | null;
+    page?: (number | null) | Page;
+    vertical?: (number | null) | Vertical;
+    anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+    url?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'callToAction';
+}
+/**
+ * The five verticals. Their pages, the home page tiles and rows, and the footer list all come from here.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "verticals".
+ */
+export interface Vertical {
+  id: number;
+  /**
+   * Short name for tiles and labels, e.g. “Manpower”.
+   */
+  name: string;
+  /**
+   * Page heading, e.g. “Manpower & Workforce Solutions”.
+   */
+  title: string;
+  /**
+   * Headline on this vertical’s home page slide.
+   */
+  heroHeadline: string;
+  /**
+   * Two or three sentences. Used on the home page, the vertical page intro and search results.
+   */
+  summary: string;
+  heroImage: number | Media;
+  whoWeWorkWith?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  services?:
+    | {
+        name: string;
+        /**
+         * One line, shown in lists.
+         */
+        summary: string;
+        /**
+         * Full description on the vertical page. Falls back to the one-line summary.
+         */
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional. The section is hidden when empty.
+   */
+  howWeDeliver?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional. Leave empty to use the page title, summary and main image.
+   */
+  seo?: {
+    /**
+     * Shown in search results and browser tabs. About 50–60 characters.
+     */
+    metaTitle?: string | null;
+    /**
+     * Shown under the title in search results. About 120–155 characters.
+     */
+    metaDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    noIndex?: boolean | null;
+  };
+  /**
+   * Page address. Fixed for each vertical.
+   */
+  slug: 'manpower' | 'education-training' | 'oil-gas' | 'green-energy' | 'global-business';
+  /**
+   * Sort order on the site (not shown).
+   */
+  order: number;
+  /**
+   * Set to “Reviewed” once the copy has been checked.
+   */
+  copyStatus: 'draft-needs-review' | 'reviewed';
+  /**
+   * Enquiries for this vertical go here (from stage 2). Never shown on the site.
+   */
+  notificationEmail?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock".
+ */
+export interface ContactBlock {
+  /**
+   * Lets menu links jump to this section.
+   */
+  anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+  label?: string | null;
+  heading: string;
+  text?: string | null;
+  buttonLabel: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock".
+ */
+export interface RichTextBlock {
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'richText';
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
+  name?: string | null;
+  /**
+   * Super admins manage users and settings. Content editors edit and publish content.
+   */
+  role: 'super-admin' | 'content-editor';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -145,27 +638,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  prefix?: string | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -183,18 +655,118 @@ export interface PayloadKv {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'schedulePublish';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'verticals';
+        value: number | Vertical;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -240,9 +812,327 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  layout?:
+    | T
+    | {
+        hero?: T | HeroBlockSelect<T>;
+        sectionIntro?: T | SectionIntroBlockSelect<T>;
+        verticalsList?: T | VerticalsListBlockSelect<T>;
+        approachStages?: T | ApproachStagesBlockSelect<T>;
+        whyPoints?: T | WhyPointsBlockSelect<T>;
+        imageText?: T | ImageTextBlockSelect<T>;
+        stats?: T | StatsBlockSelect<T>;
+        testimonials?: T | TestimonialsBlockSelect<T>;
+        callToAction?: T | CallToActionBlockSelect<T>;
+        contact?: T | ContactBlockSelect<T>;
+        richText?: T | RichTextBlockSelect<T>;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
+        noIndex?: T;
+      };
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock_select".
+ */
+export interface HeroBlockSelect<T extends boolean = true> {
+  label?: T;
+  title?: T;
+  ctaLabel?: T;
+  backgroundImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionIntroBlock_select".
+ */
+export interface SectionIntroBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  label?: T;
+  heading?: T;
+  text?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VerticalsListBlock_select".
+ */
+export interface VerticalsListBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  label?: T;
+  heading?: T;
+  intro?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApproachStagesBlock_select".
+ */
+export interface ApproachStagesBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  label?: T;
+  heading?: T;
+  intro?: T;
+  stages?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhyPointsBlock_select".
+ */
+export interface WhyPointsBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  label?: T;
+  heading?: T;
+  intro?: T;
+  points?:
+    | T
+    | {
+        title?: T;
+        icon?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageTextBlock_select".
+ */
+export interface ImageTextBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  image?: T;
+  imageSide?: T;
+  label?: T;
+  heading?: T;
+  body?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock_select".
+ */
+export interface StatsBlockSelect<T extends boolean = true> {
+  label?: T;
+  items?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock_select".
+ */
+export interface TestimonialsBlockSelect<T extends boolean = true> {
+  label?: T;
+  heading?: T;
+  items?:
+    | T
+    | {
+        quote?: T;
+        name?: T;
+        role?: T;
+        company?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock_select".
+ */
+export interface CallToActionBlockSelect<T extends boolean = true> {
+  heading?: T;
+  text?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        newTab?: T;
+        page?: T;
+        vertical?: T;
+        anchor?: T;
+        url?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlock_select".
+ */
+export interface ContactBlockSelect<T extends boolean = true> {
+  anchor?: T;
+  label?: T;
+  heading?: T;
+  text?: T;
+  buttonLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextBlock_select".
+ */
+export interface RichTextBlockSelect<T extends boolean = true> {
+  body?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "verticals_select".
+ */
+export interface VerticalsSelect<T extends boolean = true> {
+  name?: T;
+  title?: T;
+  heroHeadline?: T;
+  summary?: T;
+  heroImage?: T;
+  whoWeWorkWith?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  services?:
+    | T
+    | {
+        name?: T;
+        summary?: T;
+        description?: T;
+        id?: T;
+      };
+  howWeDeliver?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
+        noIndex?: T;
+      };
+  slug?: T;
+  order?: T;
+  copyStatus?: T;
+  notificationEmail?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  credit?: T;
+  sourceUrl?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        og?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -263,31 +1153,42 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  prefix?: T;
-  _objectKey?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -322,6 +1223,186 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Company details used across the site. Empty contact fields are hidden on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  companyName: string;
+  legalName: string;
+  /**
+   * Shown in the footer.
+   */
+  tagline?: string | null;
+  /**
+   * Optional. Without a logo the site shows the navy “TRBD” mark.
+   */
+  logo?: (number | null) | Media;
+  contactEmail: string;
+  phone?: string | null;
+  officeAddress?: string | null;
+  /**
+   * e.g. “Monday to Saturday, 9:30 am to 6:30 pm IST”.
+   */
+  workingHours?: string | null;
+  socialLinks?:
+    | {
+        platform: 'linkedin' | 'facebook' | 'instagram' | 'x' | 'youtube';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Used when a page has no image of its own.
+   */
+  defaultOgImage?: (number | null) | Media;
+  /**
+   * Only the code from the meta tag’s content="…".
+   */
+  googleVerification?: string | null;
+  bingVerification?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Header and footer links. The footer’s vertical list comes from Verticals automatically.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: number;
+  headerLinks?:
+    | {
+        link: {
+          label: string;
+          type?: ('page' | 'vertical' | 'anchor' | 'external') | null;
+          newTab?: boolean | null;
+          page?: (number | null) | Page;
+          vertical?: (number | null) | Vertical;
+          anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+          url?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  headerCta: {
+    link: {
+      label: string;
+      type?: ('page' | 'vertical' | 'anchor' | 'external') | null;
+      newTab?: boolean | null;
+      page?: (number | null) | Page;
+      vertical?: (number | null) | Vertical;
+      anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+      url?: string | null;
+    };
+  };
+  /**
+   * Shown under “Company” in the footer.
+   */
+  footerLinks?:
+    | {
+        link: {
+          label: string;
+          type?: ('page' | 'vertical' | 'anchor' | 'external') | null;
+          newTab?: boolean | null;
+          page?: (number | null) | Page;
+          vertical?: (number | null) | Vertical;
+          anchor?: ('about' | 'verticals' | 'approach' | 'why' | 'contact') | null;
+          url?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  companyName?: T;
+  legalName?: T;
+  tagline?: T;
+  logo?: T;
+  contactEmail?: T;
+  phone?: T;
+  officeAddress?: T;
+  workingHours?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  defaultOgImage?: T;
+  googleVerification?: T;
+  bingVerification?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  headerLinks?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              newTab?: T;
+              page?: T;
+              vertical?: T;
+              anchor?: T;
+              url?: T;
+            };
+        id?: T;
+      };
+  headerCta?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              newTab?: T;
+              page?: T;
+              vertical?: T;
+              anchor?: T;
+              url?: T;
+            };
+      };
+  footerLinks?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              newTab?: T;
+              page?: T;
+              vertical?: T;
+              anchor?: T;
+              url?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
@@ -330,6 +1411,31 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSchedulePublish".
+ */
+export interface TaskSchedulePublish {
+  input: {
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
+    doc?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'verticals';
+          value: number | Vertical;
+        } | null);
+    global?: string | null;
+    user?: {
+      relationTo: 'users';
+      value: number | User;
+    } | null;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

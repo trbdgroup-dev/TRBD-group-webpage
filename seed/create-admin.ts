@@ -19,11 +19,20 @@ export async function createAdmin(): Promise<void> {
   })
 
   if (existing.docs.length > 0) {
-    payload.logger.info(`Admin ${email} already exists, skipping.`)
+    const [user] = existing.docs
+    if (user.role !== 'super-admin') {
+      await payload.update({ collection: 'users', id: user.id, data: { role: 'super-admin' } })
+      payload.logger.info(`Admin ${email} exists; role set to super admin.`)
+    } else {
+      payload.logger.info(`Admin ${email} already exists, skipping.`)
+    }
     return
   }
 
-  await payload.create({ collection: 'users', data: { email, password } })
+  await payload.create({
+    collection: 'users',
+    data: { email, password, name: 'Site admin', role: 'super-admin' },
+  })
   payload.logger.info(`Created admin ${email}.`)
 }
 
