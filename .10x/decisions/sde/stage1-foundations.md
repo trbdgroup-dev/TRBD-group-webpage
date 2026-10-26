@@ -159,3 +159,19 @@ What was built, deviations from plan, and tech debt, task by task.
 **Temporary content:** verticals now carry the HTML file's client lists and four services each; Manpower also has sample "How we deliver" text and two sample questions (labelled "Sample") to exercise those sections. Real copy comes from E1.
 
 **Note:** the temp content script's clean step once left verticals behind without an error; bulk `payload.delete` reports failures in `errors` rather than throwing. The script now throws on any reported error. Use the same pattern in the E3 seed.
+
+## C7 Error pages and accessibility pass (2026-10-26)
+**Built**
+- `app/(frontend)/not-found.tsx`: branded 404 inside the normal header/footer, with "Back to the home page" and links to every vertical (falls back gracefully if the vertical list can't load).
+- `app/(frontend)/error.tsx`: segment error page (Next 16 `retry()` prop), contact email, digest reference.
+- `app/global-error.tsx`: last-resort page with its own document and inline styles, used when the root layout fails (e.g. the database is down while rendering a page that was never built).
+- Skip link ("Skip to content") as the first focusable element; `<main id="main" tabIndex={-1}>` receives focus.
+- Hero overlay strengthened (0.88 → 0.70 at 50% → 0.25) after computing worst-case contrast for white text over a white photo pixel: the 18px summary now has ≥6.4:1 (was 4.6:1); headlines (large text, 3:1 needed) ≥4.6:1 at their furthest extent.
+- Dev tooling now installed for F1: `@playwright/test` 1.64.0, `@axe-core/playwright` 4.13.0 (newest releases at least two weeks old), Chromium for Playwright.
+
+**Verified (production build, headless Chromium + axe, WCAG 2.0/2.1/2.2 A–AA + best-practice tags):** `/`, `/manpower`, `/oil-gas`, `/privacy`, 404, and the hero in slideshow mode, at 1280px and 375px — 0 violations. Sanity check: on a clean page axe passed 40 rules; after deliberately removing alt text, lowering text contrast and deleting the h1 it reported `image-alt`, `color-contrast`, `page-has-heading-one`, so the scan is real. Keyboard: first Tab → "Skip to content", Enter → focus on #main. **Reduced motion verified in a real browser:** with `reduce` the slideshow stays on Manpower past 7.8 s; without it advances to Education & Training. Screenshots checked: hero slide (readable text, vivid photo), 404 page.
+- **Database outage test:** with the DB container stopped, prebuilt pages (`/`, `/manpower`, `/privacy`) kept serving 200; a never-built page returned 500 with the branded global error page (heading, email, reference, working "Try again").
+
+**Not verified:** the segment `error.tsx` page in a browser. Any DB failure also breaks the root layout's header, so the global page is what visitors actually see; `error.tsx` covers page-only failures.
+
+**Notes:** axe can't judge text over images; hero contrast was checked by calculation (above). Git Bash rewrites `/paths` in arguments; use `MSYS_NO_PATHCONV=1` for scripted URL checks.

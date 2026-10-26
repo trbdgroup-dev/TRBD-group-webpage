@@ -132,7 +132,7 @@ export function HeroSlideshow({ label, title, ctaLabel, image, slides }: Props) 
         ))}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,27,41,0.85)_0%,rgba(13,27,41,0.6)_45%,rgba(13,27,41,0.2)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,27,41,0.88)_0%,rgba(13,27,41,0.7)_50%,rgba(13,27,41,0.25)_100%)]"
       />
 
       <div className="wrap relative z-10 pt-16 sm:pt-24" aria-live={autoAdvance ? 'off' : 'polite'}>

@@ -32,3 +32,6 @@ supabase/.branches/
 *.log
 .DS_Store
 .idea/
+
+# Playwright
+playwright/.auth/
