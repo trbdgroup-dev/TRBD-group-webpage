@@ -39,7 +39,7 @@
 - [x] C1 Data layer · [x] C2 heroReducer · [x] C3 HeroSlideshow · [x] C4 Main blocks · [x] C5 Other blocks + privacy · [x] C6 Vertical page · [x] C7 404 + polish
 - [x] D1 Metadata · [x] D2 Sitemap/robots/JSON-LD · [x] D3 OG image
 - [x] E1 Draft copy · [x] E2 Photos (approved, downloaded) · [x] E3 Seed
-- [x] F1 E2E · [ ] F2 CI · [ ] F3 Sentry + Analytics · [ ] F4 Docs
+- [x] F1 E2E · [x] F2 CI · [ ] F3 Sentry + Analytics · [ ] F4 Docs
 
 ## Open questions
 

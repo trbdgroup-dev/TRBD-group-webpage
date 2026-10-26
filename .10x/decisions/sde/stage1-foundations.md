@@ -221,3 +221,12 @@ What was built, deviations from plan, and tech debt, task by task.
 **Fixes during the run:** `@axe-core/playwright` pulled `playwright-core` 1.64.1 next to Playwright's 1.64.0, breaking the `Page` type → `overrides: { playwright-core: 1.64.0 }` + `npm dedupe`. Two test issues (duplicate accessible link name across hero and rows; Next replaces the 404 robots tag after hydration) fixed in the tests; the site behaviour was correct.
 
 **Results:** 59 passed, 7 intentionally skipped (SEO and skip-link run on desktop only), stable across three runs (~26 s). **Sanity check:** with a planted bug (slideshow ignoring reduced motion) exactly the two reduced-motion tests failed; reverted and rebuilt, 59/59 again.
+
+## F2 CI (2026-10-26)
+**Built:** `.github/workflows/ci.yml` on pull requests and pushes to main (concurrency cancels superseded runs; read-only token). Postgres 17 service; CI-only throwaway env (local disk storage, test secrets, test admin). Steps: `npm ci` → lint → format check → typecheck → Payload types up to date (`generate:types` + `git diff --exit-code`) → unit tests → migrate → migrations match the config (`migrate:create` must produce no file) → seed → build → Playwright Chromium → e2e; Playwright report uploaded on failure. Actions pinned to current majors (checkout/setup-node/upload-artifact @v7).
+
+**Verified by rehearsal:** every step, in order, in a fresh `git clone` (no `.env`, nothing uncommitted) against a separate plain `postgres:17` container with the CI env and `STORAGE_DRIVER=local`: all passed (install 171 s, lint 69 s, build 49 s, e2e 34 s; ~7 min total). Both drift guards confirmed: adding a field without regenerating types or creating a migration fails each check; with no changes both pass.
+
+**Found and fixed:** the migrations check originally ended in `|| true`, which also swallowed a crashing config (false pass). Exit codes checked: no change → 0, crash → 1; `|| true` removed.
+
+**Not verified:** a real GitHub Actions run (no GitHub repository yet). First push will be the real test; `.10x/handoff` and the launch checklist note it.
