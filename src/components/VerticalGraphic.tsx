@@ -44,7 +44,16 @@ export const LAYOUTS: Layout[] = [
 
 const pct = (value: number, total: number) => `${(value / total) * 100}%`
 
-export function VerticalGraphic({ image, variant }: { image: ImageData | null; variant: number }) {
+export function VerticalGraphic({
+  image,
+  variant,
+  priority = false,
+}: {
+  image: ImageData | null
+  variant: number
+  /** True at the top of a vertical page, where the photo is the LCP element. */
+  priority?: boolean
+}) {
   const { circle, blocks, lines } = LAYOUTS[variant % LAYOUTS.length]
 
   return (
@@ -75,6 +84,7 @@ export function VerticalGraphic({ image, variant }: { image: ImageData | null; v
             src={image.src}
             alt={image.alt}
             fill
+            {...(priority ? { loading: 'eager' as const, fetchPriority: 'high' as const } : {})}
             sizes="(min-width: 900px) 200px, 50vw"
             className="object-cover"
             style={{ objectPosition: image.position }}

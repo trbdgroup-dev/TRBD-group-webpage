@@ -1,7 +1,14 @@
 'use client'
 
-import { RefreshRouteOnSave } from '@payloadcms/live-preview-react'
+import dynamic from 'next/dynamic'
 import { usePathname, useRouter } from 'next/navigation'
+
+// Loaded only when the bar renders (draft mode), so the live-preview code isn't
+// downloaded by ordinary visitors (Phase 5 performance fix).
+const RefreshRouteOnSave = dynamic(
+  () => import('@payloadcms/live-preview-react').then((mod) => mod.RefreshRouteOnSave),
+  { ssr: false },
+)
 
 // Shown only in draft mode. Re-renders the page whenever the editor saves in
 // the CMS (live preview), and offers a way back to the published site.

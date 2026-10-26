@@ -50,7 +50,7 @@ export async function VerticalPage({ vertical }: { vertical: Vertical }) {
             <p className="mt-5 max-w-[38em] text-lg text-muted">{vertical.summary}</p>
           </div>
           <div className="w-[260px] max-w-full nav:w-full">
-            <VerticalGraphic image={toImage(vertical.heroImage)} variant={position} />
+            <VerticalGraphic image={toImage(vertical.heroImage)} variant={position} priority />
           </div>
         </div>
       </section>

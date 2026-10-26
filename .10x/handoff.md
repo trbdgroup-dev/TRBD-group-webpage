@@ -1,11 +1,14 @@
 # Handoff
 
-**From:** SDE (Phase 4, complete) → **To:** QA + Security (Phase 5)
+**From:** QA + Security (Phase 5, complete) **To:** user / DevOps (launch)
 
-Stage 1 is built: all tasks A1–F4 done (see `decisions/sde/stage1-foundations.md`). Local stack: Docker Desktop → `npx supabase start` → `npm run migrate` → `npm run seed` → `npm run build` → `npm run test:e2e`.
+Stage 1 is built and verified. Reports: `reviews/2026-10-26-qa-report.md` and `reviews/2026-10-26-security-review.md`.
 
-**For QA:** unit 77, e2e 59 (+7 intentional skips) at 1280/375; axe clean on key pages; reduced motion and keyboard verified. Review coverage gaps: segment `error.tsx` page never rendered in a browser; production robots.txt branch only unit-tested; no load/performance measurement on real infrastructure (Lighthouse is on the launch checklist).
+**State:** unit 85/85; end-to-end 59 (+7 intentional skips); axe clean; Lighthouse mobile 94/100/100 (SEO held down only by the deliberate noindex on non-production builds); security probe 30/30. Security headers, safe CMS links, GraphQL off, lazy Sentry and live preview, audit fixes are all in.
 
-**For Security:** review `/preview` (secret + staff session + same-site redirect), access rules (`src/lib/access`, verified live 16/16 in B), JSON-LD escaping, Sentry scrubbing (verified with a stand-in endpoint), CSRF behaviour of Payload cookie auth, secrets handling (`.env` gitignored, CI uses throwaway values), dependency audit, security headers (none beyond X-Robots-Tag yet: consider CSP, HSTS, frame-ancestors).
+**Next:**
+1. Check the GitHub Actions run (couldn't be checked from here).
+2. Work through `docs/launch-checklist.md`: create the accounts, connect Supabase, Vercel and Sentry, deploy, then the live checks (headers, LCP under 2.5 s on Vercel, robots, Sentry test event).
+3. Stage 2 (the enquiry form) can start in parallel; add a script CSP with nonces at that point.
 
-Docs: `README.md`, `docs/architecture.md`, `docs/content-guide.md`, `docs/launch-checklist.md`, ADRs in `docs/adr/`.
+**Accepted risks:** happy-dom and esbuild advisories, no script CSP yet, browser errors before Sentry loads aren't reported, simulated LCP of 2.9–3.1 s pending real measurement.

@@ -1,8 +1,9 @@
 'use client'
 
-import * as Sentry from '@sentry/nextjs'
 import Link from 'next/link'
 import { useEffect } from 'react'
+
+import { reportError } from '@/lib/sentry/client'
 
 // Shown when a page fails to render (for example, the database is unreachable).
 // The header and footer stay; visitors can retry or go home. Server errors only
@@ -15,7 +16,7 @@ export default function ErrorPage({
   retry: () => void
 }) {
   useEffect(() => {
-    Sentry.captureException(error)
+    reportError(error)
   }, [error])
 
   return (

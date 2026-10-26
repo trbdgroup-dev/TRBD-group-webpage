@@ -62,7 +62,8 @@ function Background({
           src={image.src}
           alt=""
           fill
-          priority={priority}
+          // The intro photo is the LCP element: fetch it first (Next 16 replaces `priority`).
+          {...(priority ? { loading: 'eager' as const, fetchPriority: 'high' as const } : {})}
           sizes="100vw"
           className="object-cover"
           style={{ objectPosition: image.position }}
@@ -237,6 +238,8 @@ export function HeroSlideshow({ label, title, ctaLabel, image, slides }: Props) 
                     alt=""
                     fill
                     sizes="(min-width: 900px) 20vw, 62vw"
+                    // Tiles load after the intro photo (the LCP element) on slow connections.
+                    fetchPriority="low"
                     className="object-cover"
                     style={{ objectPosition: slide.image.position }}
                   />

@@ -63,6 +63,15 @@ The hero opens on a static TRBD introduction; the vertical slideshow starts only
 - Branded 404, a page-level error page and a last-resort global error page. With the database down, pre-built pages keep serving.
 - Sentry (`src/instrumentation*.ts`) reports server, edge and browser errors when `NEXT_PUBLIC_SENTRY_DSN` is set. Every event is scrubbed first (`src/lib/sentry/scrub.ts`): no request bodies, cookies, user identity or IPs; query strings removed from every URL; email addresses redacted, including URL-encoded ones.
 - Vercel Web Analytics loads only on the production deploy and sets no cookies.
+- Browser-side Sentry loads lazily (`src/lib/sentry/client.ts`), once the page has loaded and the browser is idle, so it doesn't slow the first render. Browser errors in the first moments of a visit, before it loads, aren't reported; error pages load it on demand. Server-side reporting is unaffected.
+
+## Security
+
+- **Response headers** (`next.config.ts`): HSTS (two years, subdomains, preload), `nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN` plus CSP `frame-ancestors 'self'` (only the site itself, for Live Preview, may frame pages), `base-uri`, `object-src` and `form-action` locked down, and a `Permissions-Policy` that turns off camera, microphone, location, payment and USB. No `X-Powered-By`. A full script CSP isn't set yet: Next.js inline scripts would need per-request nonces, which disables static pages.
+- **CMS:** GraphQL is off (the site uses the Local API and REST only). Accounts lock after repeated wrong passwords; no public sign-up, uploads or writes; team inboxes and drafts aren't readable anonymously.
+- **Links from the CMS** pass `safeHref` (`src/lib/links.ts`): only `http(s)`, `mailto:`, `tel:`, site-relative and `#` addresses are output; anything else (`javascript:`, `data:`, `vbscript:`) becomes `#`.
+- **Preview secret** is compared in constant time.
+- **Dependencies:** `npm audit` is reviewed before release; accepted findings are listed in the launch checklist.
 
 ## Accessibility
 

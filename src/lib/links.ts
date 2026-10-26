@@ -49,3 +49,13 @@ export function linkProps(link: CmsLink | null | undefined) {
     ...(external && link?.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
   }
 }
+
+/**
+ * Only web, email and phone links, same-site paths and #anchors may be output.
+ * Anything else (javascript:, data:, vbscript:, …) becomes "#". Used for links
+ * typed into rich text, which the CMS does not restrict the way link fields are.
+ */
+export function safeHref(url: string | null | undefined): string {
+  const value = (url ?? '').trim()
+  return /^(https?:\/\/|mailto:|tel:|\/|#)/i.test(value) ? value : '#'
+}

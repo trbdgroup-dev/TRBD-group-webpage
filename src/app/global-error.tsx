@@ -1,7 +1,8 @@
 'use client'
 
-import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
+
+import { reportError } from '@/lib/sentry/client'
 
 // Last-resort fallback when the root layout itself fails (e.g. the header cannot
 // load its CMS data). It replaces the whole document, so it carries its own
@@ -14,7 +15,7 @@ export default function GlobalError({
   retry: () => void
 }) {
   useEffect(() => {
-    Sentry.captureException(error)
+    reportError(error)
   }, [error])
 
   return (

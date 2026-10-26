@@ -1,6 +1,6 @@
 # Status
 
-**Phase:** 4 — Implementation complete (2026-10-26); next: Phase 5 Verification (QA + Security)
+**Phase:** 5 — Verification complete (2026-10-26); stage 1 ready for launch once the launch checklist is done (accounts, deploy, live checks)
 **Started:** 2026-10-22
 
 ## Inputs
@@ -41,7 +41,10 @@
 - [x] E1 Draft copy · [x] E2 Photos (approved, downloaded) · [x] E3 Seed
 - [x] F1 E2E · [x] F2 CI · [x] F3 Sentry + Analytics · [x] F4 Docs
 
+- [x] Phase 5 QA review (`reviews/2026-10-26-qa-report.md`) · [x] Phase 5 security review (`reviews/2026-10-26-security-review.md`)
+
 ## Open questions
+- First GitHub Actions run (pushed 2026-10-26) not verified from here: the user to check the Actions tab.
 
 ## Blockers
 - None.

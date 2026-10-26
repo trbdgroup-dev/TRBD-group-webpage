@@ -50,6 +50,8 @@ export default buildConfig({
   collections: [Pages, Verticals, Media, Users],
   globals: [SiteSettings, Navigation],
   editor: lexicalEditor(),
+  // Unused: the admin and the site use the REST and Local APIs. Off to reduce exposure.
+  graphQL: { disable: true },
   secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

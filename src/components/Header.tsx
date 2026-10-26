@@ -38,12 +38,12 @@ export async function Header() {
           className="flex items-center gap-3 no-underline"
           label={`${settings.companyName} home`}
         >
+          {/* The mark's letters come from CSS so they aren't page text: the link's
+              visible text then matches its accessible name (WCAG 2.5.3). */}
           <span
             aria-hidden="true"
-            className="grid size-[38px] shrink-0 place-items-center bg-navy text-[13px] font-semibold tracking-[0.06em] text-white"
-          >
-            TRBD
-          </span>
+            className="grid size-[38px] shrink-0 place-items-center bg-navy text-[13px] font-semibold tracking-[0.06em] text-white before:content-['TRBD']"
+          />
           <span className="font-serif text-[15px] font-semibold leading-tight text-navy sm:text-[19px]">
             {settings.companyName}
           </span>

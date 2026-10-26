@@ -1,5 +1,5 @@
 import { withPayload } from '@payloadcms/next/withPayload'
-import { withSentryConfig } from '@sentry/nextjs'
+import { withSentryConfig } from '@sentry/nextjs/config'
 import type { NextConfig } from 'next'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -14,6 +14,8 @@ const mediaUrl = process.env.S3_PUBLIC_URL ? new URL(process.env.S3_PUBLIC_URL) 
 const mediaIsLocal = mediaUrl ? ['127.0.0.1', 'localhost'].includes(mediaUrl.hostname) : false
 
 const nextConfig: NextConfig = {
+  // No "X-Powered-By: Next.js, Payload" banner (Payload's wrapper honours this too).
+  poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
     // Disk storage (STORAGE_DRIVER=local) serves files through Payload's API.
@@ -30,11 +32,31 @@ const nextConfig: NextConfig = {
       : [],
     dangerouslyAllowLocalIP: mediaIsLocal,
   },
-  // Belt and braces with robots.ts: anything other than the production deploy
-  // (local, Vercel previews) tells crawlers not to index it.
   async headers() {
-    if (process.env.VERCEL_ENV === 'production') return []
-    return [{ source: '/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] }]
+    // Security headers on every response (Phase 5). The CSP restricts framing,
+    // plugins, <base> and form targets; scripts and styles are not restricted
+    // because static pages and Payload's admin rely on inline bootstraps.
+    const security = [
+      { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+      {
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+      },
+      {
+        key: 'Content-Security-Policy',
+        value: "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'",
+      },
+    ]
+    // Belt and braces with robots.ts: anything other than the production deploy
+    // (local, Vercel previews) tells crawlers not to index it.
+    const noindex =
+      process.env.VERCEL_ENV === 'production'
+        ? []
+        : [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
+    return [{ source: '/:path*', headers: [...security, ...noindex] }]
   },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {

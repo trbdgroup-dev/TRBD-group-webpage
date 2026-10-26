@@ -67,7 +67,9 @@ Do **not** set `SEED_ADMIN_*` in Vercel.
 - [ ] Live Preview works for a vertical.
 - [ ] Share the home page and a vertical in WhatsApp or LinkedIn's post inspector: title, description and image look right.
 - [ ] Sentry receives a test error (for example from Sentry's "verify installation" step) with no personal data in it.
-- [ ] Run Lighthouse (mobile) on `/`: performance, accessibility, best practices and SEO all green; LCP under 2.5 s.
+- [ ] Run Lighthouse (mobile) on `/` and `/manpower`: performance, accessibility, best practices and SEO all green; LCP under 2.5 s. (Locally, simulated mobile measured LCP 2.9–3.1 s with performance 94; confirm on Vercel's CDN, and if it's still over 2.5 s, make the intro photo smaller in the CMS.)
+- [ ] Security headers present on the live site: `curl -sI https://www.trbdgroup.com/` shows `strict-transport-security`, `content-security-policy`, `x-frame-options`, `x-content-type-options`, `referrer-policy` and `permissions-policy`, no `x-powered-by`, and **no** `x-robots-tag` (that one only appears on non-production deploys). Optionally check at securityheaders.com.
+- [ ] Once the site has run on HTTPS for a few weeks without problems, consider submitting the domain at hstspreload.org (the header already allows it; removal is slow, so only when sure every subdomain serves HTTPS).
 
 ## 6. Search and listings
 
@@ -86,5 +88,6 @@ Do **not** set `SEED_ADMIN_*` in Vercel.
 
 - [ ] **GitHub:** protect `main` (require pull requests and a passing **CI** check before merging). The first push of the CI workflow is its first real run (verify that it passes).
 - [ ] Upgrade local Node.js to the latest 22.x.
+- [ ] Run `npm audit --omit=dev` and review anything new. Accepted at the stage 1 review (2026-10-26): `happy-dom` (pulled in by Payload's rich-text editor; no fixed version in the 20.x line; it only processes content typed by staff) and `esbuild` (affects only its development server, which this project never runs). Remove the `dompurify` and `undici` overrides in `package.json` once Payload's own dependencies reach those versions.
 - [ ] Record where the secrets live (Vercel, Supabase, Sentry) and who has access.
 - [ ] Book a 30-day review: Search Console coverage, Sentry issues, analytics, content updates.

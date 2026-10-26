@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs'
+
 import { type Browser, type Page, expect } from '@playwright/test'
 
 // Shared helpers for the e2e suite. The suite assumes the seeded content
@@ -10,6 +12,9 @@ export const VERTICALS = [
   { slug: 'green-energy', name: 'Green Energy', title: 'Green Energy Consulting' },
   { slug: 'global-business', name: 'Global Business', title: 'Global Business Advisory' },
 ] as const
+
+/** Session of the seeded admin, saved once per run by global-setup.ts. */
+export const STAFF_STATE = 'playwright/.auth/staff.json'
 
 export const KEY_PAGES = ['/', '/manpower', '/oil-gas', '/privacy'] as const
 
@@ -42,11 +47,9 @@ export async function previewContext(browser: Browser, baseURL: string) {
     SEED_ADMIN_PASSWORD: password,
     PREVIEW_SECRET: secret,
   } = process.env
-  if (!email || !password || !secret) return null
+  if (!email || !password || !secret || !existsSync(STAFF_STATE)) return null
 
-  const context = await browser.newContext({ baseURL })
-  const login = await context.request.post('/api/users/login', { data: { email, password } })
-  expect(login.ok()).toBe(true)
+  const context = await browser.newContext({ baseURL, storageState: STAFF_STATE })
   const page = await context.newPage()
   await page.goto(`/preview?secret=${encodeURIComponent(secret)}&path=/`)
   return { context, page }

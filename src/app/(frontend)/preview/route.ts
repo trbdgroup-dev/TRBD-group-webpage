@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto'
 import { draftMode, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import type { NextRequest } from 'next/server'
@@ -6,6 +7,14 @@ import { env } from '@/lib/env'
 import { getPayloadClient } from '@/lib/payload'
 import { safePreviewPath } from '@/lib/preview'
 
+/** Constant-time comparison, so response timing can't reveal the secret. */
+function secretMatches(given: string | null): boolean {
+  if (!given) return false
+  const a = Buffer.from(given)
+  const b = Buffer.from(env.PREVIEW_SECRET)
+  return a.length === b.length && timingSafeEqual(a, b)
+}
+
 // Enables draft mode for signed-in staff, then shows the requested page (B6).
 // Needs both the preview secret (from the admin's preview links) and a valid
 // staff session, so a leaked link alone never exposes drafts.
@@ -13,7 +22,7 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams
   const path = safePreviewPath(params.get('path'))
 
-  if (params.get('secret') !== env.PREVIEW_SECRET || !path) {
+  if (!secretMatches(params.get('secret')) || !path) {
     return new Response('Invalid preview link.', { status: 401 })
   }
 
