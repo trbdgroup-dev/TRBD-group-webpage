@@ -125,6 +125,95 @@ await payload.create({
         ctaLabel: 'Explore our verticals',
         backgroundImage: heroImage.id,
       },
+      {
+        blockType: 'sectionIntro',
+        anchor: 'about',
+        label: 'Who we are',
+        heading: 'One partner, one point of accountability.',
+        text: 'TRBD Consulting Group Private Limited helps organisations hire the right workforce, build their skills, run energy projects, move to cleaner power and grow across borders. A single account lead coordinates every part of your project, so you work with one team instead of several vendors.',
+      },
+      {
+        blockType: 'verticalsList',
+        anchor: 'verticals',
+        label: 'What we do',
+        heading: 'Five verticals, connected by one team.',
+        intro:
+          'Our verticals often work together. A new energy project may need skilled crews, safety training and market-entry support at the same time, and we can deliver all three.',
+      },
+      {
+        blockType: 'approachStages',
+        anchor: 'approach',
+        label: 'How we work',
+        heading: 'From first brief to long-term support',
+        intro:
+          'Every engagement follows the same four stages, whether we are filling fifty positions or opening a new market.',
+        stages: [
+          {
+            title: 'Understand',
+            text: 'We study your goals, site conditions, compliance needs and timelines before proposing anything.',
+          },
+          {
+            title: 'Plan',
+            text: 'You get a clear scope, schedule and cost, with named owners for each deliverable.',
+          },
+          {
+            title: 'Deliver',
+            text: 'Our team mobilises people, programmes or projects and reports progress against the plan.',
+          },
+          {
+            title: 'Sustain',
+            text: 'We stay on for follow-up, audits, retraining and replacement so results hold over time.',
+          },
+        ],
+      },
+      {
+        blockType: 'whyPoints',
+        anchor: 'why',
+        label: 'Why TRBD',
+        heading: 'What clients get from working with us',
+        intro:
+          'We are built for organisations that need several kinds of support and would rather not manage several vendors.',
+        points: [
+          {
+            title: 'One point of contact',
+            icon: 'user-round',
+            text: 'A single account lead coordinates every vertical involved in your project.',
+          },
+          {
+            title: 'Compliance first',
+            icon: 'shield-check',
+            text: 'Documentation, certifications, visas and safety standards are checked before work begins.',
+          },
+          {
+            title: 'Sector knowledge',
+            icon: 'briefcase',
+            text: 'Our consultants come from the industries they advise, from rigs to classrooms to boardrooms.',
+          },
+          {
+            title: 'Scalable teams',
+            icon: 'chart-column',
+            text: 'We staff a short assignment or a multi-year programme with the same process.',
+          },
+          {
+            title: 'Cross-border reach',
+            icon: 'globe',
+            text: 'We help clients source talent, partners and opportunities across countries and regions.',
+          },
+          {
+            title: 'Transparent reporting',
+            icon: 'file-text',
+            text: 'Regular progress reports show what has been done, what is next and what it costs.',
+          },
+        ],
+      },
+      {
+        blockType: 'contact',
+        anchor: 'contact',
+        label: 'Contact',
+        heading: 'Tell us what you need',
+        text: 'Email us a few details about your requirement and our team will get back to you within two working days.',
+        buttonLabel: 'Email us',
+      },
     ],
   },
   context: context(),

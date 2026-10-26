@@ -118,3 +118,16 @@ What was built, deviations from plan, and tech debt, task by task.
 **Bug found and fixed (matters for E3):** reusing one `context` object across Payload Local API calls made every upload after the first skip storage silently (DB record created, no file in the bucket). Payload writes to `context`; always pass a fresh object per call. The temporary content script now does.
 
 **Temporary:** `seed/temp-hero-content.ts` loads 6 photos, 5 published verticals (HTML wording only) and a home page with the hero, for viewing C3–C7. Delete it in E3 (`… temp-hero-content.ts clean` removes its content).
+
+## C4 Home page sections (2026-10-26)
+**Built**
+- `blocks/RenderBlocks.tsx`: renders a page's blocks in order (Image and text, Stats, Testimonials, Rich text arrive in C5).
+- Components: Section intro (white), Verticals list (cream; compact alternating rows from Verticals, "Learn more" with screen-reader text naming the vertical), Approach stages (white; 1/2/4 columns), Why points (cream; white cards with amber top edge and lucide icons from the fixed set), Contact (white; Site Settings details with empty rows hidden, `mailto:` button, `tel:` link when a phone exists), Call to action (cream strip).
+- `components/VerticalGraphic.tsx`: the mockup's three compositions — photo in a navy-tinted circle (next/image, focal point honoured), amber blocks behind, navy outline and connector lines in front; geometry from a 500×400 viewBox converted to percentages.
+- Home page renders the `home` document through RenderBlocks. Sections carry `id` from the block's anchor; `[id] { scroll-margin-top: 72px }` keeps anchors clear of the sticky header.
+
+**Bug found and fixed:** the custom `nav` breakpoint was `900px` while Tailwind's built-ins are rem, so Tailwind emitted it before `sm` and `sm:` utilities won at desktop (Approach showed 2 columns, Why 2). Now `56.25rem` (still 900px), sorted after `sm`.
+
+**Verified in the browser (temporary content using only the HTML file's wording):** 1280px — Who we are, What we do rows with real photos in the circle graphics, How we work in 4 columns, Why TRBD in 3, Contact details, footer; hero tiles still a 5-column grid; one h1; sections in the approved order. 375px — everything in one column, page scrollWidth 375. No console errors. Build: `/` static.
+
+**Note:** Contact's "Website" row shows the host from `NEXT_PUBLIC_SITE_URL` (localhost locally, www.trbdgroup.com in production).

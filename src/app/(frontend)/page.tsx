@@ -1,13 +1,11 @@
-import { HeroBlock } from '@/blocks/Hero/Component'
+import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { getPage } from '@/lib/payload'
 
-// Home page: the Pages document with slug "home". Only the Hero renders so far;
-// the remaining sections arrive with RenderBlocks (C4).
+// Home page: the Pages document with slug "home", rendered block by block.
 export default async function HomePage() {
   const page = await getPage('home')
-  const hero = page?.layout?.find((block) => block.blockType === 'hero')
 
-  if (!hero) {
+  if (!page?.layout?.length) {
     return (
       <section className="section">
         <div className="wrap">
@@ -18,5 +16,5 @@ export default async function HomePage() {
     )
   }
 
-  return <HeroBlock block={hero} />
+  return <RenderBlocks blocks={page.layout} />
 }

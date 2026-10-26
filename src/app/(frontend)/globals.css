@@ -15,12 +15,17 @@
   --font-serif: var(--font-source-serif), Georgia, serif;
   --font-sans: var(--font-public-sans), system-ui, sans-serif;
 
-  --breakpoint-nav: 900px;
+  /* rem, like the built-in breakpoints, so Tailwind sorts it after sm (40rem). */
+  --breakpoint-nav: 56.25rem; /* 900px */
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+  }
+  /* Keep section tops clear of the sticky header when jumping to #anchors. */
+  [id] {
+    scroll-margin-top: 72px;
   }
   @media (prefers-reduced-motion: reduce) {
     html {
