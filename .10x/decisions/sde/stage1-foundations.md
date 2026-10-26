@@ -196,3 +196,16 @@ What was built, deviations from plan, and tech debt, task by task.
 **Not verified end-to-end:** the production branch of robots.txt (allow + sitemap line) needs a `VERCEL_ENV=production` build; covered by unit tests, and on the launch checklist to confirm on the live domain.
 
 **Tooling note:** with `MSYS_NO_PATHCONV=1`, use `taskkill /PID … /T /F` (single slashes); the `//PID` form silently fails and leaves a stale server on port 3000.
+
+## E1 Draft copy + E3 Seed (2026-10-26)
+**Built**
+- `seed/content/verticals.ts` (E1): per vertical, a **published base** (HTML-page wording: name, title, summary, client list, four services with one-line summaries; plus the mockup-approved hero headlines) and an **unpublished draft** (a paragraph per service, "How we deliver" intro + four Understand/Plan/Deliver/Sustain steps, 3–4 common questions). Rule followed: the draft only expands what the HTML says; no numbers, client names, named certifications/standards bodies, licences, offices, countries or results. Overseas placement copy deliberately avoids implying any recruitment licence (only the firm can state that).
+- `seed/content/site.ts`: Site Settings (company, legal name, tagline, email; phone/address/hours left empty), Navigation anchors, the home page blocks (HTML wording + approved "Who we are"), and a factual privacy notice describing stage 1 as built (published so the footer link works; flagged for review, ideally DPDP-aware, before launch and again at stage 2).
+- `seed/seed.ts` (E3): `npm run seed` creates only what's missing (admin, 11 media by source URL, privacy + home pages, 5 verticals, settings, navigation incl. the privacy page relation) and never overwrites edits; `npm run seed:reset` deletes the seeded content (and any old temporary content) first. Verticals: create published base, then `update({ draft: true })` with the expanded copy, so the public sees only the base. Fresh `context` per call, `errors` checked on bulk deletes, revalidation disabled. `seed/lib/lexical.ts` (rich text builders), `seed/lib/admin.ts` (shared with `seed:admin`).
+- Removed `seed/temp-hero-content.ts` and its content.
+
+**Found and fixed:** `payload run` doesn't forward CLI flags to the script, so `--reset` silently did nothing; reset is now the `SEED_RESET=1` env var behind `npm run seed:reset`.
+
+**Verified:** reset run → 22 steps, second run → nothing created (idempotent); DB: pages home+privacy, 5 verticals, 11 media, 55 storage objects, no temporary media; all 11 media URLs 200. Production build (31/31): for each vertical the public page has no "How we deliver"/questions while the staff preview shows them (3–4 questions) and the preview bar; admin lists the five in order, all "Draft – needs review" with unpublished changes, team inbox empty; home shows every approved section; header and footer links come from Navigation (footer privacy link via page relation); /privacy published; sitemap no longer has the sample page.
+
+**For the content writer (goes into F4's content guide):** review each vertical's draft in /cms (Live Preview), edit, set Copy status to "Reviewed", publish. Fill in phone, office address, hours and each vertical's team inbox. Review the privacy notice.
