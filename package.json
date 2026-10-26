@@ -21,7 +21,8 @@
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "seed:admin": "cross-env NODE_OPTIONS=--no-deprecation payload run seed/create-admin.ts",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run seed/seed.ts",
-    "seed:reset": "cross-env SEED_RESET=1 NODE_OPTIONS=--no-deprecation payload run seed/seed.ts"
+    "seed:reset": "cross-env SEED_RESET=1 NODE_OPTIONS=--no-deprecation payload run seed/seed.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",
@@ -62,5 +63,8 @@
   },
   "engines": {
     "node": ">=22.18.0"
+  },
+  "overrides": {
+    "playwright-core": "1.64.0"
   }
 }

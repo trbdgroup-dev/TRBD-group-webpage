@@ -209,3 +209,15 @@ What was built, deviations from plan, and tech debt, task by task.
 **Verified:** reset run → 22 steps, second run → nothing created (idempotent); DB: pages home+privacy, 5 verticals, 11 media, 55 storage objects, no temporary media; all 11 media URLs 200. Production build (31/31): for each vertical the public page has no "How we deliver"/questions while the staff preview shows them (3–4 questions) and the preview bar; admin lists the five in order, all "Draft – needs review" with unpublished changes, team inbox empty; home shows every approved section; header and footer links come from Navigation (footer privacy link via page relation); /privacy published; sitemap no longer has the sample page.
 
 **For the content writer (goes into F4's content guide):** review each vertical's draft in /cms (Live Preview), edit, set Copy status to "Reviewed", publish. Fill in phone, office address, hours and each vertical's team inbox. Review the privacy notice.
+
+## F1 End-to-end tests (2026-10-26)
+**Built**
+- `playwright.config.ts`: projects `desktop` (1280×800) and `mobile` (Pixel 7 at 375×812); runs against `npm run start` (reuses a running server locally); loads `.env` with Node's `process.loadEnvFile`; GitHub reporter in CI, traces kept on failure. `npm run test:e2e` (after `npm run build` and `npm run seed`).
+- `tests/e2e/pages.spec.ts`: home sections in order with one h1; all five vertical pages (title, mailto subject, four other-vertical links); privacy page; branded 404 for unknown paths and `/home`; drafts stay private (no "How we deliver"/questions/preview bar publicly); staff preview shows the drafts (skips without credentials); `/preview` refuses visitors without a staff session.
+- `tests/e2e/hero.spec.ts`: intro first with no auto-rotation; five hidden slides in the HTML; Explore → Manpower then auto-advance; tile → its slide and hero link; pause holds past 7 s; logo reset to intro at scroll 0; reduced motion never advances.
+- `tests/e2e/layout-a11y.spec.ts`: axe (WCAG 2.0/2.1/2.2 A–AA + best-practice) with zero serious/critical issues on `/`, `/manpower`, `/oil-gas`, `/privacy`, 404 and the slideshow state, plus no horizontal scroll, at both sizes; skip link (desktop); header collapse on phones; hero tiles swipe on phones, grid on desktop.
+- `tests/e2e/seo.spec.ts` (desktop only): titles, canonicals, og:image, twitter card, JSON-LD types; generated preview PNG 1200×630; sitemap entries; robots + X-Robots-Tag outside production; 404 noindex in the raw HTML.
+
+**Fixes during the run:** `@axe-core/playwright` pulled `playwright-core` 1.64.1 next to Playwright's 1.64.0, breaking the `Page` type → `overrides: { playwright-core: 1.64.0 }` + `npm dedupe`. Two test issues (duplicate accessible link name across hero and rows; Next replaces the 404 robots tag after hydration) fixed in the tests; the site behaviour was correct.
+
+**Results:** 59 passed, 7 intentionally skipped (SEO and skip-link run on desktop only), stable across three runs (~26 s). **Sanity check:** with a planted bug (slideshow ignoring reduced motion) exactly the two reduced-motion tests failed; reverted and rebuilt, 59/59 again.
