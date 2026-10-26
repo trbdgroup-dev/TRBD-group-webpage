@@ -1288,9 +1288,12 @@ export interface Navigation {
         id?: string | null;
       }[]
     | null;
-  headerCta: {
-    link: {
-      label: string;
+  /**
+   * Optional. Leave empty to show “Contact us” linking to the contact section.
+   */
+  headerCta?: {
+    link?: {
+      label?: string | null;
       type?: ('page' | 'vertical' | 'anchor' | 'external') | null;
       newTab?: boolean | null;
       page?: (number | null) | Page;

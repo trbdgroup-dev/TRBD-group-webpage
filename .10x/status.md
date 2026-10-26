@@ -36,7 +36,7 @@
 ## Task progress (stage 1)
 - [x] A1 Scaffold · [x] A2 Local Supabase + migrations · [x] A3 Storage spike · [x] A4 Tokens/fonts/shell
 - [x] B1 Users + access · [x] B2 Media · [x] B3 Globals · [x] B4 Verticals + slugs · [x] B5 Pages + blocks · [x] B6 Revalidation + preview
-- [x] C1 Data layer · [ ] C2 heroReducer · [ ] C3 HeroSlideshow · [ ] C4 Main blocks · [ ] C5 Other blocks + privacy · [ ] C6 Vertical page · [ ] C7 404 + polish
+- [x] C1 Data layer · [x] C2 heroReducer · [x] C3 HeroSlideshow · [ ] C4 Main blocks · [ ] C5 Other blocks + privacy · [ ] C6 Vertical page · [ ] C7 404 + polish
 - [ ] D1 Metadata · [ ] D2 Sitemap/robots/JSON-LD · [ ] D3 OG image
 - [ ] E1 Draft copy · [x] E2 Photos (approved, downloaded) · [ ] E3 Seed
 - [ ] F1 E2E · [ ] F2 CI · [ ] F3 Sentry + Analytics · [ ] F4 Docs

@@ -101,3 +101,20 @@ What was built, deviations from plan, and tech debt, task by task.
 **Not yet verified:** the live preview pane inside the admin, visually. It's wired, but only becomes meaningful once page blocks render (C3–C6); check it then.
 
 **Note:** Payload accepts the session cookie only with a same-site `Origin` or `Sec-Fetch-Site` header (CSRF protection). Browsers always send these on navigation, so editors are unaffected; scripted tests must send them.
+
+## C2 heroReducer + C3 HeroSlideshow (2026-10-26)
+**Built**
+- `lib/hero/reducer.ts`: pure `heroReducer` (EXPLORE, SELECT, NEXT, TOGGLE_PAUSE, RESET) and `shouldAutoAdvance` (slides + unpaused + not hovered/focused + no reduced motion); 7 s `ROTATION_MS`. 9 unit tests.
+- `components/HeroSlideshow.tsx` (client island): intro (label, the page's only `h1`, amber Explore button) and five server-rendered slides (`h2` headline, summary, "Learn more about …"), inactive ones `hidden`; slide/carousel ARIA roles; `aria-live` polite except while auto-rotating; progress segments; pause/play (lucide icons) shown only in the slideshow; tiles as buttons with `aria-current`; swipe row with scroll-snap below 900px, 5-column grid above. Intro background `priority`; vertical backgrounds render only after interest (hover/focus on the tile row or Explore button, or a click), so only the intro photo and 384px tile thumbnails load initially.
+- `blocks/Hero/Component.tsx` maps the Hero block + Verticals (CMS order) to slides. `lib/media.ts` `toImage()` turns uploads into next/image props with the focal point as `object-position` (tested).
+- `components/LogoLink.tsx`: on `/` the header logo dispatches `trbd:hero-reset`, scrolls to top and clears any `#hash`; elsewhere it's a normal link home.
+- Home page renders the Hero from the `home` Pages document (other blocks in C4); friendly message if unpublished.
+- `lucide-react` pinned at 1.55.0 (newest release at least two weeks old; the package publishes almost daily).
+
+**Verified in the browser (dev server, temporary content):** 1280px — intro with real photo, five photo tiles, one h1, slides in HTML but hidden, no pause button; Explore → Manpower + pause button; auto-advance after 7 s → Education & Training; pause holds the slide past 7 s and shows "Play"; tile 4 → Green Energy; logo → intro, scrollY 0; only the intro (1920w) and tile thumbnails (384w) requested before interaction. 375px — swipe row with snap, page scrollWidth = 375. No console errors or hydration warnings. Build: `/` still static.
+
+**Not verified in a browser:** reduced-motion (covered by unit tests; F1's Playwright run will emulate it).
+
+**Bug found and fixed (matters for E3):** reusing one `context` object across Payload Local API calls made every upload after the first skip storage silently (DB record created, no file in the bucket). Payload writes to `context`; always pass a fresh object per call. The temporary content script now does.
+
+**Temporary:** `seed/temp-hero-content.ts` loads 6 photos, 5 published verticals (HTML wording only) and a home page with the hero, for viewing C3–C7. Delete it in E3 (`… temp-hero-content.ts clean` removes its content).

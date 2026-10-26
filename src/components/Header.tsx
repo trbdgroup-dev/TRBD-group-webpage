@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { linkProps, type CmsLink } from '@/lib/links'
 import { getNavigation, getSiteSettings } from '@/lib/payload'
 
+import { LogoLink } from './LogoLink'
 import { ButtonLink } from './ui'
 
 // Header links come from the Navigation global. Until it has content, the
 // approved defaults are shown so the site never renders an empty header.
-// The logo's hero-reset behaviour on the home page arrives with HeroSlideshow (C3).
 const DEFAULT_LINKS = [
   { href: '/#verticals', label: 'Verticals' },
   { href: '/#approach', label: 'How we work' },
@@ -34,10 +34,9 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-white">
       <div className="wrap flex h-16 items-center justify-between gap-5 nav:h-[72px]">
-        <Link
-          href="/"
+        <LogoLink
           className="flex items-center gap-3 no-underline"
-          aria-label={`${settings.companyName} home`}
+          label={`${settings.companyName} home`}
         >
           <span
             aria-hidden="true"
@@ -48,7 +47,7 @@ export async function Header() {
           <span className="font-serif text-[15px] font-semibold leading-tight text-navy sm:text-[19px]">
             {settings.companyName}
           </span>
-        </Link>
+        </LogoLink>
         <nav aria-label="Main" className="flex items-center gap-7 text-[15px] font-medium">
           {links.map((link) => (
             <Link
