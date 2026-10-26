@@ -145,3 +145,17 @@ What was built, deviations from plan, and tech debt, task by task.
 **Note:** the build now reads published pages from the database, so CI must have a migrated, seeded DB before `next build` (already the plan in F2).
 
 **Temporary:** the privacy text here is a placeholder built from spec facts; E3 seeds the real draft notice (unpublished, for review). The `sample-blocks` page is test-only and is removed with the rest of the temporary content.
+
+## C6 Vertical pages (2026-10-26)
+**Built**
+- `components/VerticalPage.tsx`: intro (label, the page's `h1` title, summary, VerticalGraphic in the vertical's position so it matches its home-page row), "Who we work with" tags, Services (full rich-text description, falling back to the one-line summary), How we deliver (rich text), Common questions (native `<details>` accordion with chevron), cream "Talk to our {name} team" strip with `mailto:` subject "Enquiry: {name}", links to the other four verticals. Empty sections are omitted (`lib/content.hasRichText` detects editors that only hold an empty paragraph).
+- Backgrounds: intro white → services cream → delivery white → questions white → email strip cream (the spec's off-white strip; avoids two creams in a row).
+- `[slug]` route serves verticals first (fixed slug list), then CMS pages; `generateStaticParams` builds published verticals and pages. `lib/payload.listPublishedVerticalSlugs()`.
+- `lib/content.ts`: `hasRichText`, `mailtoHref` (tested).
+
+**Verified in the browser:** /manpower (all sections filled) — one h1, sections in order, accordion opens, mailto subject `Enquiry%3A%20Manpower`, four other-vertical links; /oil-gas (no delivery/FAQs) — those sections omitted, subject `Enquiry%3A%20Oil%20%26%20Gas`; all five vertical URLs 200; 375px no overflow; no console errors. Build: all five verticals and both pages prerendered (●).
+- **B6 live preview, now verified visually:** the admin's Live Preview pane loads `/preview?…&path=/manpower` (secret + staff session) and shows the page with the preview bar; changing the Title updates the preview after autosave; the public /manpower still shows the published title. Test draft discarded.
+
+**Temporary content:** verticals now carry the HTML file's client lists and four services each; Manpower also has sample "How we deliver" text and two sample questions (labelled "Sample") to exercise those sections. Real copy comes from E1.
+
+**Note:** the temp content script's clean step once left verticals behind without an error; bulk `payload.delete` reports failures in `errors` rather than throwing. The script now throws on any reported error. Use the same pattern in the E3 seed.

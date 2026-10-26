@@ -72,6 +72,20 @@ export async function listPublishedPageSlugs(): Promise<string[]> {
   return docs.map((doc) => doc.slug)
 }
 
+/** Published vertical slugs for static generation. */
+export async function listPublishedVerticalSlugs(): Promise<string[]> {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'verticals',
+    where: { _status: { equals: 'published' } },
+    select: { slug: true },
+    pagination: false,
+    depth: 0,
+    overrideAccess: false,
+  })
+  return docs.map((doc) => doc.slug)
+}
+
 export const getPage = cache(async (slug: string): Promise<Page | null> => {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({

@@ -45,6 +45,83 @@ const bullets = (items: string[]) => ({
 })
 const richText = (...children: object[]) => ({ root: { ...base, type: 'root', children } }) as never
 
+// From the HTML file: who each vertical works with and its four services.
+const htmlDetails: Record<string, { clients: string[]; services: [string, string][] }> = {
+  manpower: {
+    clients: [
+      'Construction',
+      'Facilities',
+      'Hospitality',
+      'Healthcare',
+      'Manufacturing',
+      'Energy projects',
+    ],
+    services: [
+      ['Permanent recruitment', 'Screening, interviews and trade tests for long-term roles.'],
+      ['Contract & project staffing', 'Crews mobilised for fixed-term projects and shutdowns.'],
+      [
+        'Overseas placement',
+        'Documentation, medicals, visas and travel for international deployment.',
+      ],
+      ['Payroll & HR outsourcing', 'Attendance, payroll and statutory compliance managed for you.'],
+    ],
+  },
+  'education-training': {
+    clients: ['Students', 'Job seekers', 'Corporate teams', 'Technicians', 'Institutions'],
+    services: [
+      [
+        'Vocational & skill training',
+        'Trade courses aligned to industry and certification standards.',
+      ],
+      [
+        'HSE & safety certification',
+        'Health, safety and environment programmes for site personnel.',
+      ],
+      ['Corporate learning', 'Leadership, soft skills and compliance training for staff.'],
+      ['Study abroad counselling', 'Course selection, admissions and visa guidance for students.'],
+    ],
+  },
+  'oil-gas': {
+    clients: ['Operators', 'EPC contractors', 'Refineries', 'Pipelines', 'Service companies'],
+    services: [
+      ['Technical manpower', 'Engineers, inspectors, operators and rig crews on call.'],
+      ['Project support', 'Planning, procurement coordination and site supervision.'],
+      ['Inspection & QA/QC', 'Third-party inspection and quality documentation.'],
+      ['Operations & maintenance', 'Shutdown, turnaround and routine maintenance teams.'],
+    ],
+  },
+  'green-energy': {
+    clients: [
+      'Industrial plants',
+      'Commercial buildings',
+      'Developers',
+      'Municipalities',
+      'Investors',
+    ],
+    services: [
+      [
+        'Solar project advisory',
+        'Feasibility, design review and vendor selection for rooftop and ground-mount systems.',
+      ],
+      ['Energy audits', 'Measure consumption and find savings before you invest.'],
+      ['Sustainability strategy', 'Decarbonisation roadmaps and ESG reporting support.'],
+      ['Installation & O&M teams', 'Trained crews for installation, commissioning and upkeep.'],
+    ],
+  },
+  'global-business': {
+    clients: ['SMEs', 'Exporters', 'Startups', 'Investors', 'Family businesses'],
+    services: [
+      ['Market entry strategy', 'Market research, entry models and go-to-market plans.'],
+      ['Company formation', 'Incorporation, licensing and local registration support.'],
+      [
+        'Partner & trade matchmaking',
+        'Introductions to distributors, suppliers and joint-venture partners.',
+      ],
+      ['Cross-border compliance', 'Guidance on import, export, tax and regulatory requirements.'],
+    ],
+  },
+}
+
 const verticals = [
   {
     slug: 'manpower',
@@ -89,21 +166,36 @@ const verticals = [
 ] as const
 
 async function clean() {
-  await payload.delete({
-    collection: 'pages',
-    where: { slug: { equals: 'home' } },
-    context: context(),
-  })
-  await payload.delete({
-    collection: 'verticals',
-    where: { order: { greater_than: 0 } },
-    context: context(),
-  })
-  await payload.delete({
-    collection: 'media',
-    where: { credit: { contains: TAG } },
-    context: context(),
-  })
+  // Bulk deletes report per-document failures in `errors` instead of throwing.
+  const report = (label: string, result: { docs: unknown[]; errors: { message: string }[] }) => {
+    if (result.errors.length) {
+      throw new Error(`${label}: ${result.errors.map((e) => e.message).join('; ')}`)
+    }
+  }
+  report(
+    'pages',
+    await payload.delete({
+      collection: 'pages',
+      where: { slug: { in: ['home', 'privacy', 'sample-blocks'] } },
+      context: context(),
+    }),
+  )
+  report(
+    'verticals',
+    await payload.delete({
+      collection: 'verticals',
+      where: { order: { greater_than: 0 } },
+      context: context(),
+    }),
+  )
+  report(
+    'media',
+    await payload.delete({
+      collection: 'media',
+      where: { credit: { contains: TAG } },
+      context: context(),
+    }),
+  )
   payload.logger.info('TEMP cleaned')
 }
 
@@ -134,7 +226,23 @@ for (const [i, v] of verticals.entries()) {
       order: i + 1,
       copyStatus: 'draft-needs-review',
       heroImage: image.id,
-      services: [{ name: 'Placeholder service', summary: 'Placeholder' }],
+      whoWeWorkWith: htmlDetails[v.slug].clients.map((label) => ({ label })),
+      services: htmlDetails[v.slug].services.map(([name, summary]) => ({ name, summary })),
+      ...(v.slug === 'manpower'
+        ? {
+            howWeDeliver: richText(
+              para('Sample text for checking the layout. The real copy is drafted in task E1.'),
+              bullets(['Sample step one', 'Sample step two', 'Sample step three']),
+            ),
+            faqs: [
+              {
+                question: 'Sample question one?',
+                answer: 'Sample answer for checking the layout.',
+              },
+              { question: 'Sample question two?', answer: 'A second sample answer.' },
+            ],
+          }
+        : {}),
       _status: 'published',
     },
     context: context(),
