@@ -63,3 +63,21 @@ What was built, deviations from plan, and tech debt, task by task.
 **Verified:** in the browser at 1280px (nav links visible, no horizontal overflow, computed fonts Source Serif 4 / Public Sans) and 375px (only logo + Contact, scrollWidth = 375); no console errors; build ✓.
 
 **Deviations:** none. **Tech debt:** header/footer links hard-coded until C1.
+
+## B1–B5 CMS content model (2026-10-23, verified 2026-10-26)
+**Built**
+- B1 Users: `name`, `role` (`super-admin` | `content-editor`, saved to JWT, only super admins may set it). Access: admin panel for any staff; super admins manage all users, editors read/update only themselves. Hook makes the first-ever user a super admin. `lib/access` (isStaff, isSuperAdmin, isSuperAdminOrSelf, publishedOrStaff, staffOnlyField, superAdminField) + unit tests. `seed:admin` now also upgrades an existing admin to super admin.
+- B2 Media: required alt, caption, credit, sourceUrl; focal point; sizes thumbnail 400, card 960, hero 2000, og 1200×630; public read, staff write.
+- B3 Globals: Site Settings (company, contact, social links, default OG image, Google/Bing verification) and Navigation (header links ≤6, header button, footer "Company" links). Shared `fields/link.ts` (page | vertical | home section | external, validated URL) and `fields/seo.ts`.
+- B4 Verticals: all spec fields; fixed slug select (unique); drafts + autosave + scheduled publish, 50 versions; create/delete super admin only; `notificationEmail` staff-only at field level; `copyStatus`. `lib/slugs` (reserved slugs, validatePageSlug, slugify, pagePath) + unit tests.
+- B5 Pages: title, slug (validated, unique), layout of 11 blocks (Hero, Section intro, Verticals list, Approach stages, Why points, Image and text, Stats, Testimonials, Call to action, Contact, Rich text), SEO; drafts like Verticals. Blocks share `anchorField`/`sectionHeaderFields`.
+- Migration `20261023_095900_content_model` (47 tables incl. version tables).
+
+**Verified (live, Local API with overrideAccess: false, 16/16 pass):** public sees only published verticals, never the team inbox, no draft pages, no users, can read site settings; staff see inbox and drafts; editor sees only own account, cannot create users or edit others, cannot promote self (role stays content-editor), can edit but not delete verticals; page slugs `manpower` and `cms` rejected with the reserved message; duplicate vertical slug rejected. Admin UI checked in the browser: dashboard groups Content/Admin/Settings, vertical and page edit screens render, block picker lists all 11 blocks, no console errors. Test data removed.
+
+**Deviations**
+- Navigation footer simplified to one "Company" link list: the approved footer's other column (Verticals) is generated from the Verticals collection, and the tagline lives in Site Settings.
+- B6 (revalidation + preview) moved after C1 as planned in the EM dependency table.
+
+**Tech debt / notes**
+- Autosave means opening "Create new" saves an empty draft immediately (standard Payload behaviour with autosave). Harmless (drafts are never public), but editors may see empty drafts if they abandon a new item. Document in the content guide; revisit if it annoys editors.
