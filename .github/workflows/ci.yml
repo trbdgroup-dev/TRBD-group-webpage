@@ -54,6 +54,12 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Same npm as local development. Node 22 ships npm 10, which rejects a
+      # lockfile written by npm 11 when it leaves out other platforms' optional
+      # packages (it failed on @emnapi/core, needed by sharp's WebAssembly build).
+      - name: Use npm 11
+        run: npm install -g npm@11.6.2
+
       - name: Install
         run: npm ci
 
