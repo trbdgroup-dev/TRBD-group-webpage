@@ -18,6 +18,7 @@ Items marked **(verify)** are steps that could not be tested before the accounts
 - [ ] **Database → Connect:** copy two connection strings:
   - the **transaction pooler** (port 6543), used by the live site;
   - the **session pooler** or **direct connection**, used to run migrations and the seed.
+- [ ] **Check the connection first:** `node scripts/check-db.mjs` with `DATABASE_URI` set to the session pooler string plus `?sslmode=verify-full&sslrootcert=<path to prod-ca-2021.crt>`. It should report SSL: yes.
 - [ ] **Run migrations and seed from a trusted machine** (verify):
 
   ```bash
@@ -32,20 +33,21 @@ Items marked **(verify)** are steps that could not be tested before the accounts
 - [ ] **Framework:** Next.js. **Node.js:** 22.x. **Function region:** Mumbai (`bom1`).
 - [ ] **Environment variables** (Production; set Preview too, ideally pointing at a separate Supabase project so previews never touch live content):
 
-| Variable                                              | Value                                                                  |
-| ----------------------------------------------------- | ---------------------------------------------------------------------- |
-| `DATABASE_URI`                                        | Supabase **transaction pooler** connection string (port 6543) (verify) |
-| `PAYLOAD_SECRET`                                      | New random value, at least 32 characters (never reuse the local one)   |
-| `PREVIEW_SECRET`                                      | New random value, at least 16 characters                               |
-| `NEXT_PUBLIC_SITE_URL`                                | `https://www.trbdgroup.com`                                            |
-| `STORAGE_DRIVER`                                      | `s3`                                                                   |
-| `S3_ENDPOINT`                                         | `https://<project-ref>.supabase.co/storage/v1/s3`                      |
-| `S3_REGION`                                           | `ap-south-1`                                                           |
-| `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY`           | From Supabase Storage → S3 connection                                  |
-| `S3_BUCKET`                                           | `media`                                                                |
-| `S3_PUBLIC_URL`                                       | `https://<project-ref>.supabase.co/storage/v1/object/public/media`     |
-| `NEXT_PUBLIC_SENTRY_DSN`                              | From the Sentry project                                                |
-| `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN` | For readable error stack traces (source maps)                          |
+| Variable                                              | Value                                                                                                                                               |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URI`                                        | Supabase **transaction pooler** string (port 6543), with **no** `sslmode` (verify)                                                                  |
+| `DATABASE_CA_CERT`                                    | Contents of Supabase's CA certificate (`prod-ca-2021.crt`, from Database settings → SSL Configuration), pasted as text                              |
+| `PAYLOAD_SECRET`                                      | New random value, at least 32 characters (never reuse the local one)                                                                                |
+| `PREVIEW_SECRET`                                      | New random value, at least 16 characters                                                                                                            |
+| `NEXT_PUBLIC_SITE_URL`                                | `https://www.trbdgroup.com` (until the domain is connected: the `….vercel.app` address, or `/cms` sign-in fails; change it and redeploy afterwards) |
+| `STORAGE_DRIVER`                                      | `s3`                                                                                                                                                |
+| `S3_ENDPOINT`                                         | `https://<project-ref>.supabase.co/storage/v1/s3`                                                                                                   |
+| `S3_REGION`                                           | `ap-south-1`                                                                                                                                        |
+| `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY`           | From Supabase Storage → S3 connection                                                                                                               |
+| `S3_BUCKET`                                           | `media`                                                                                                                                             |
+| `S3_PUBLIC_URL`                                       | `https://<project-ref>.supabase.co/storage/v1/object/public/media`                                                                                  |
+| `NEXT_PUBLIC_SENTRY_DSN`                              | From the Sentry project                                                                                                                             |
+| `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN` | For readable error stack traces (source maps)                                                                                                       |
 
 Do **not** set `SEED_ADMIN_*` in Vercel.
 

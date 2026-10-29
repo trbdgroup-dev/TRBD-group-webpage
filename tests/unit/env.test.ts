@@ -65,4 +65,17 @@ describe('parseEnv', () => {
   it('rejects an unknown storage driver', () => {
     expect(() => parseEnv({ ...valid, STORAGE_DRIVER: 'ftp' })).toThrow(/STORAGE_DRIVER/)
   })
+
+  it('accepts a database CA certificate with real or escaped line breaks', () => {
+    const pem = '-----BEGIN CERTIFICATE-----\nMIIB\n-----END CERTIFICATE-----'
+    expect(parseEnv({ ...valid, DATABASE_CA_CERT: pem }).DATABASE_CA_CERT).toBe(pem)
+    const escaped = pem.replaceAll('\n', '\\n')
+    expect(parseEnv({ ...valid, DATABASE_CA_CERT: `${escaped}\n` }).DATABASE_CA_CERT).toBe(pem)
+  })
+
+  it('rejects a database CA certificate that is not PEM', () => {
+    expect(() => parseEnv({ ...valid, DATABASE_CA_CERT: 'C:/certs/ca.crt' })).toThrow(
+      /DATABASE_CA_CERT: must be a PEM certificate/,
+    )
+  })
 })

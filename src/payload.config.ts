@@ -64,6 +64,9 @@ export default buildConfig({
     migrationDir: path.resolve(dirname, 'migrations'),
     pool: {
       connectionString: env.DATABASE_URI,
+      // With a CA certificate the connection is encrypted and the server verified.
+      // Leave sslmode out of DATABASE_URI then: options in the URI override this.
+      ...(env.DATABASE_CA_CERT ? { ssl: { ca: env.DATABASE_CA_CERT } } : {}),
     },
   }),
   sharp,

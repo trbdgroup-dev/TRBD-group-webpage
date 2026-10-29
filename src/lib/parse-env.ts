@@ -15,6 +15,16 @@ const schema = z
     DATABASE_URI: z
       .string()
       .regex(/^postgres(ql)?:\/\//, 'must be a postgres:// or postgresql:// connection string'),
+    // Supabase's CA certificate (PEM text), so the database connection is encrypted
+    // and verified where no certificate file exists (Vercel). Pasted with real line
+    // breaks or as one line with literal \n sequences; both work.
+    DATABASE_CA_CERT: z
+      .string()
+      .transform((value) => value.replace(/\\n/g, '\n').trim())
+      .refine((value) => value.includes('-----BEGIN CERTIFICATE-----'), {
+        message: 'must be a PEM certificate (-----BEGIN CERTIFICATE----- ...)',
+      })
+      .optional(),
     PAYLOAD_SECRET: z.string().min(32, 'must be at least 32 characters'),
     NEXT_PUBLIC_SITE_URL: z.url().default('http://localhost:3000'),
     // Shared secret on admin preview links (B6); staff sign-in is also required.
