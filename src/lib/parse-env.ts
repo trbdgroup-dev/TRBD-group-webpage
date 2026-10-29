@@ -9,12 +9,34 @@ const S3_KEYS = [
   'S3_PUBLIC_URL',
 ] as const
 
+/**
+ * Why a connection string can't be parsed, without echoing it (it holds the
+ * password). Null when it parses. scripts/check-db.mjs mirrors this.
+ */
+export function connectionStringProblem(uri: string): string | null {
+  if (URL.canParse(uri, 'postgres://base')) return null
+  const rest = uri.replace(/^[a-z]+:\/\//i, '')
+  const at = rest.lastIndexOf('@')
+  const userinfo = at === -1 ? '' : rest.slice(0, at)
+  const password = userinfo.slice(userinfo.indexOf(':') + 1)
+  const special = ['#', '/', '?'].filter((char) => password.includes(char))
+  if (special.length > 0) {
+    return `the password contains ${special.join(' ')}: percent-encode them (# as %23, / as %2F, ? as %3F) or use a password of letters and numbers only`
+  }
+  if (/\s/.test(rest.slice(at + 1))) return 'there is a space in the host, port or database name'
+  return 'check the host and port (the port must be a number, e.g. 6543)'
+}
+
 // Later stages add their variables here (Sentry, email).
 const schema = z
   .object({
     DATABASE_URI: z
       .string()
-      .regex(/^postgres(ql)?:\/\//, 'must be a postgres:// or postgresql:// connection string'),
+      .regex(/^postgres(ql)?:\/\//, 'must be a postgres:// or postgresql:// connection string')
+      .superRefine((value, ctx) => {
+        const problem = connectionStringProblem(value)
+        if (problem) ctx.addIssue({ code: 'custom', message: `not a valid URL: ${problem}` })
+      }),
     // Supabase's CA certificate (PEM text), so the database connection is encrypted
     // and verified where no certificate file exists (Vercel). Pasted with real line
     // breaks or as one line with literal \n sequences; both work.

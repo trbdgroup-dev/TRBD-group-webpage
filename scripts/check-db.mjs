@@ -11,20 +11,32 @@ if (!uri) {
   process.exit(1)
 }
 
-let target
-try {
-  const url = new URL(uri)
-  target = `${url.username}@${url.hostname}:${url.port || 5432}${url.pathname}`
-  if (uri.includes('YOUR-PASSWORD')) {
-    console.error('The connection string still contains the [YOUR-PASSWORD] placeholder.')
-    process.exit(1)
+// Same diagnosis as connectionStringProblem in src/lib/parse-env.ts.
+function connectionStringProblem(value) {
+  if (URL.canParse(value, 'postgres://base')) return null
+  const rest = value.replace(/^[a-z]+:\/\//i, '')
+  const at = rest.lastIndexOf('@')
+  const userinfo = at === -1 ? '' : rest.slice(0, at)
+  const password = userinfo.slice(userinfo.indexOf(':') + 1)
+  const special = ['#', '/', '?'].filter((char) => password.includes(char))
+  if (special.length > 0) {
+    return `the password contains ${special.join(' ')}: percent-encode them (# as %23, / as %2F, ? as %3F) or use a password of letters and numbers only`
   }
-} catch {
-  console.error(
-    'DATABASE_URI is not a valid URL. If the password has special characters, URL-encode them.',
-  )
+  if (/\s/.test(rest.slice(at + 1))) return 'there is a space in the host, port or database name'
+  return 'check the host and port (the port must be a number, e.g. 6543)'
+}
+
+if (uri.includes('YOUR-PASSWORD')) {
+  console.error('The connection string still contains the [YOUR-PASSWORD] placeholder.')
   process.exit(1)
 }
+const problem = connectionStringProblem(uri)
+if (problem) {
+  console.error(`DATABASE_URI is not a valid URL: ${problem}.`)
+  process.exit(1)
+}
+const url = new URL(uri)
+const target = `${url.username}@${url.hostname}:${url.port || 5432}${url.pathname}`
 console.log(`Connecting to ${target} ...`)
 
 const client = new pg.Client({ connectionString: uri, connectionTimeoutMillis: 15000 })

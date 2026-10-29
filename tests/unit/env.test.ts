@@ -73,6 +73,24 @@ describe('parseEnv', () => {
     expect(parseEnv({ ...valid, DATABASE_CA_CERT: `${escaped}\n` }).DATABASE_CA_CERT).toBe(pem)
   })
 
+  it('explains an unparseable database URI without echoing it', () => {
+    const host = '@aws-0-ap-south-1.pooler.supabase.com:6543/postgres'
+    const withPassword = (password: string) => `postgresql://postgres.ref:${password}${host}`
+    for (const [password, cause] of [
+      ['se#cret', /contains #/],
+      ['se/cr?et', /contains \/ \?/],
+    ] as const) {
+      const run = () => parseEnv({ ...valid, DATABASE_URI: withPassword(password) })
+      expect(run).toThrow(cause)
+      expect(run).not.toThrow(new RegExp(password.replace(/[?/]/g, '\\$&')))
+    }
+    expect(() =>
+      parseEnv({ ...valid, DATABASE_URI: `postgresql://u:pw@db.example.com :6543/postgres` }),
+    ).toThrow(/space in the host/)
+    // Brackets and spaces inside the password still parse.
+    expect(parseEnv({ ...valid, DATABASE_URI: withPassword('a[b] c') }).DATABASE_URI).toBeTruthy()
+  })
+
   it('rejects a database CA certificate that is not PEM', () => {
     expect(() => parseEnv({ ...valid, DATABASE_CA_CERT: 'C:/certs/ca.crt' })).toThrow(
       /DATABASE_CA_CERT: must be a PEM certificate/,
