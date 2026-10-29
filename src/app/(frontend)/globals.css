@@ -17,6 +17,27 @@
 
   /* rem, like the built-in breakpoints, so Tailwind sorts it after sm (40rem). */
   --breakpoint-nav: 56.25rem; /* 900px */
+
+  /* Hero timers (ADR-003): a layer is revealed, or a fade removed, from left to
+     right over --fill-ms. The component advances when the animation ends. */
+  --animate-reveal: reveal var(--fill-ms, 6s) linear forwards;
+  --animate-unfade: unfade var(--fill-ms, 7s) linear forwards;
+  @keyframes reveal {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes unfade {
+    from {
+      clip-path: inset(0 0 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 100%);
+    }
+  }
 }
 
 @layer base {

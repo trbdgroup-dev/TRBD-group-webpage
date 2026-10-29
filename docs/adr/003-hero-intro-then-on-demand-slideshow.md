@@ -1,4 +1,4 @@
-# ADR-003: Home hero opens on a static TRBD intro; the vertical slideshow starts only on user action
+# ADR-003: Home hero opens on a TRBD intro; the vertical slideshow starts on user action or after a visible countdown
 
 **Status:** Accepted
 **Date:** 2026-10-22
@@ -37,6 +37,16 @@ The approved design takes inspiration from AON's hero (full-bleed photo with a r
 ### Risks
 
 - Vertical images flash on the first switch. Mitigation: preload on first hover or focus of the tiles.
+
+## Amendment (2026-10-29): timed start and filling tiles
+
+At the client's request the intro now starts the slideshow by itself, with visible timers:
+
+- **Intro:** the "Explore our verticals" button starts faded (outlined) and fills with amber from left to right over 6 s; when it is full the slideshow opens on Manpower. This happens once per visit: after the logo returns to the intro, it waits for a click. Keyboard focus inside the hero or the pause button (now also shown during the countdown) holds the fill. Hovering doesn't, because the pointer often rests on the large hero.
+- **Tiles:** every tile except the current slide's is faded (dimmed and greyscale). The next slide's tile clears from left to right over the 7 s rotation, and the slide changes when it is clear. Hover, focus and pause freeze the fill and the timer together, since the slide changes on the fill's `animationend` rather than on a separate timer.
+- **Reduced motion:** unchanged in spirit. No fills, no automatic start, no rotation; the Explore button shows filled.
+- **Accessibility:** the moving fill lasts over 5 s, so WCAG 2.2.2 applies: the visible pause button covers it. The fill copy of the button label is `aria-hidden`, so the accessible name is unchanged.
+- **Trade-off:** visitors who never interact now see the slideshow, which was the original reason for rejecting autoplay. The client chose this deliberately, with the countdown as a signal of what's coming.
 
 ## Dependencies
 

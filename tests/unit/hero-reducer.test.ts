@@ -4,20 +4,27 @@ import {
   heroReducer,
   initialHeroState,
   shouldAutoAdvance,
+  shouldRunIntro,
   type HeroState,
 } from '@/lib/hero/reducer'
 
-const slides = (index: number, paused = false): HeroState => ({ mode: 'slides', index, paused })
+const slides = (index: number, paused = false): HeroState => ({
+  mode: 'slides',
+  index,
+  paused,
+  autoStart: false,
+})
+const intro = { ...initialHeroState, autoStart: false }
 
 describe('heroReducer', () => {
-  it('starts on the TRBD intro without rotating', () => {
-    expect(initialHeroState).toEqual({ mode: 'intro', index: 0, paused: false })
+  it('starts on the TRBD intro, set to start the slideshow by itself, without rotating', () => {
+    expect(initialHeroState).toEqual({ mode: 'intro', index: 0, paused: false, autoStart: true })
     expect(shouldAutoAdvance(initialHeroState, { interacting: false, reducedMotion: false })).toBe(
       false,
     )
   })
 
-  it('Explore opens the first vertical (Manpower) and starts rotating', () => {
+  it('Explore (clicked or automatic) opens the first vertical (Manpower) and starts rotating', () => {
     expect(heroReducer(initialHeroState, { type: 'EXPLORE' })).toEqual(slides(0))
   })
 
@@ -36,14 +43,20 @@ describe('heroReducer', () => {
     expect(heroReducer(initialHeroState, { type: 'NEXT', count: 5 })).toBe(initialHeroState)
   })
 
-  it('pause toggles only in the slideshow', () => {
+  it('pause toggles in the slideshow and during the intro countdown', () => {
     expect(heroReducer(slides(1), { type: 'TOGGLE_PAUSE' })).toEqual(slides(1, true))
     expect(heroReducer(slides(1, true), { type: 'TOGGLE_PAUSE' })).toEqual(slides(1))
-    expect(heroReducer(initialHeroState, { type: 'TOGGLE_PAUSE' })).toBe(initialHeroState)
+    expect(heroReducer(initialHeroState, { type: 'TOGGLE_PAUSE' })).toEqual({
+      ...initialHeroState,
+      paused: true,
+    })
+    // After a reset the intro just waits, so there is nothing to pause.
+    expect(heroReducer(intro, { type: 'TOGGLE_PAUSE' })).toBe(intro)
   })
 
-  it('RESET (logo click) returns to the intro from anywhere', () => {
-    expect(heroReducer(slides(3, true), { type: 'RESET' })).toEqual(initialHeroState)
+  it('RESET (logo click) returns to the intro, which then waits for the visitor', () => {
+    expect(heroReducer(slides(3, true), { type: 'RESET' })).toEqual(intro)
+    expect(heroReducer({ ...initialHeroState, paused: true }, { type: 'RESET' })).toEqual(intro)
   })
 })
 
@@ -61,5 +74,24 @@ describe('shouldAutoAdvance', () => {
 
   it('never auto-advances with reduced motion', () => {
     expect(shouldAutoAdvance(slides(0), { ...quiet, reducedMotion: true })).toBe(false)
+  })
+})
+
+describe('shouldRunIntro', () => {
+  const quiet = { focused: false, reducedMotion: false }
+
+  it('counts down on first load only', () => {
+    expect(shouldRunIntro(initialHeroState, quiet)).toBe(true)
+    expect(shouldRunIntro(intro, quiet)).toBe(false)
+    expect(shouldRunIntro(slides(0), quiet)).toBe(false)
+  })
+
+  it('holds while paused or while focus is inside the hero', () => {
+    expect(shouldRunIntro({ ...initialHeroState, paused: true }, quiet)).toBe(false)
+    expect(shouldRunIntro(initialHeroState, { ...quiet, focused: true })).toBe(false)
+  })
+
+  it('never starts the slideshow by itself with reduced motion', () => {
+    expect(shouldRunIntro(initialHeroState, { ...quiet, reducedMotion: true })).toBe(false)
   })
 })

@@ -50,7 +50,7 @@ Section blocks: Hero, Section intro, Verticals list, Approach stages, Why points
 
 ## The home hero
 
-The hero opens on a static TRBD introduction; the vertical slideshow starts only when a visitor clicks "Explore our verticals" or a tile. It rotates every 7 seconds, pauses on hover, focus or the pause button, never auto-advances with reduced motion, and resets when the logo is clicked. All slides are in the HTML for search engines; only the intro photo loads up front. State lives in a pure reducer (`src/lib/hero/reducer.ts`). See [ADR-003](adr/003-hero-intro-then-on-demand-slideshow.md).
+The hero opens on a TRBD introduction whose "Explore our verticals" button fills over 6 seconds; then the vertical slideshow starts by itself (once per visit), or at once when a visitor clicks the button or a tile. Tiles are faded except the current slide's; the next tile fills in over the 7-second rotation and the slide changes when it's full. Hover, focus or the pause button hold it; reduced motion turns off the fills, the automatic start and the rotation; the logo returns to the intro, which then waits for a click. All slides are in the HTML for search engines; only the intro photo loads up front. State lives in a pure reducer (`src/lib/hero/reducer.ts`). See [ADR-003](adr/003-hero-intro-then-on-demand-slideshow.md).
 
 ## SEO
 
